@@ -42,6 +42,10 @@ struct FabricDraft {
     var locationID: UUID?
     var photos: [PhotoDraft] = []
     var isSample = false
+    var loadedYardage: Double?
+    var loadedWidth: Double?
+    var loadedScrapWidth: Double?
+    var loadedScrapLength: Double?
 
     init() {}
 
@@ -81,6 +85,10 @@ struct FabricDraft {
         locationID = fabric.location?.id
         photos = fabric.orderedPhotos.map { PhotoDraft(id: $0.id, data: $0.imageData) }
         isSample = fabric.isSample
+        loadedYardage = fabric.yardage
+        loadedWidth = fabric.widthInches
+        loadedScrapWidth = fabric.scrapWidthInches
+        loadedScrapLength = fabric.scrapLengthInches
     }
 }
 
@@ -290,27 +298,43 @@ struct FabricEditorView: View {
         }
     }
 
+    private var measurementKeyboard: UIKeyboardType {
+        units.system == .imperial ? .numbersAndPunctuation : .decimalPad
+    }
+
+    private var fractionNote: String {
+        units.system == .imperial ? " Fractions such as 1/2, 3/8, and 44 1/2 are fine." : ""
+    }
+
+    private var scrapAmountNote: String {
+        "Scraps are matched on these two sides. Yardage can stay blank.\(fractionNote)"
+    }
+
+    private var boltAmountNote: String {
+        "On hand is what is left. Mark a cut from the fabric page to tie it to a project. It cannot go below zero.\(fractionNote)"
+    }
+
     private var amountSection: some View {
         Section {
             Toggle("This is a scrap or remnant", isOn: $draft.isScrap)
             TextField("On hand (\(units.lengthUnit.abbreviation))", text: $draft.yardageText)
-                .keyboardType(.decimalPad)
+                .keyboardType(measurementKeyboard)
                 .focused($focus, equals: .yardage)
             if draft.isScrap {
                 TextField("Scrap width (\(units.widthUnit.abbreviation))", text: $draft.scrapWidthText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(measurementKeyboard)
                     .focused($focus, equals: .scrapWidth)
                 TextField("Scrap length (\(units.widthUnit.abbreviation))", text: $draft.scrapLengthText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(measurementKeyboard)
                     .focused($focus, equals: .scrapLength)
-                Text("Scraps are matched on these two sides. Yardage can stay blank.")
+                Text(scrapAmountNote)
                     .font(.footnote)
                     .foregroundStyle(Studio.inkSecondary)
             } else {
                 TextField("Width (\(units.widthUnit.abbreviation))", text: $draft.widthText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(measurementKeyboard)
                     .focused($focus, equals: .width)
-                Text("On hand is what is left. Mark a cut from the fabric page to tie it to a project. It cannot go below zero.")
+                Text(boltAmountNote)
                     .font(.footnote)
                     .foregroundStyle(Studio.inkSecondary)
             }
@@ -398,7 +422,9 @@ struct FabricEditorView: View {
                 }
             }
             Button("Walk through a stretch test") { showStretch = true }
-            Text("The guide uses a 10 cm mark and a tape. The phone does not measure stretch.")
+            Text(units.system == .imperial
+                ? "The guide uses a 4 inch mark and a tape. The phone does not measure stretch."
+                : "The guide uses a 10 cm mark and a tape. The phone does not measure stretch.")
                 .font(.footnote)
                 .foregroundStyle(Studio.inkSecondary)
         } header: {
@@ -622,14 +648,14 @@ struct FabricEditorView: View {
         fabric.structure = draft.structure
         fabric.fabricType = draft.type
         fabric.customTypeName = draft.customTypeName.trimmingCharacters(in: .whitespacesAndNewlines)
-        fabric.yardage = units.yards(fromDisplay: draft.yardageText) ?? 0
+        fabric.yardage = units.resolvedYards(text: draft.yardageText, canonical: draft.loadedYardage) ?? 0
         fabric.isScrap = draft.isScrap
         if draft.isScrap {
-            fabric.scrapWidthInches = units.inches(fromDisplay: draft.scrapWidthText) ?? 0
-            fabric.scrapLengthInches = units.inches(fromDisplay: draft.scrapLengthText) ?? 0
+            fabric.scrapWidthInches = units.resolvedInches(text: draft.scrapWidthText, canonical: draft.loadedScrapWidth) ?? 0
+            fabric.scrapLengthInches = units.resolvedInches(text: draft.scrapLengthText, canonical: draft.loadedScrapLength) ?? 0
             fabric.widthInches = fabric.scrapWidthInches
         } else {
-            fabric.widthInches = units.inches(fromDisplay: draft.widthText) ?? 0
+            fabric.widthInches = units.resolvedInches(text: draft.widthText, canonical: draft.loadedWidth) ?? 0
             fabric.scrapWidthInches = 0
             fabric.scrapLengthInches = 0
         }

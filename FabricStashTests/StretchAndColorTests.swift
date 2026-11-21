@@ -3,11 +3,17 @@ import XCTest
 
 final class StretchAssessmentTests: XCTestCase {
     func testPercentFromATenCentimeterMark() throws {
-        let stretched = try XCTUnwrap(StretchAssessment.percent(stretchedCentimeters: 13))
-        let relaxed = try XCTUnwrap(StretchAssessment.percent(stretchedCentimeters: 10))
+        let stretched = try XCTUnwrap(StretchAssessment.percent(stretched: 13, marked: 10))
+        let relaxed = try XCTUnwrap(StretchAssessment.percent(stretched: 10, marked: 10))
+        let imperial = try XCTUnwrap(StretchAssessment.percent(stretched: 5, marked: 4))
         XCTAssertEqual(stretched, 30, accuracy: 0.000_000_1)
         XCTAssertEqual(relaxed, 0, accuracy: 0.000_000_1)
-        XCTAssertNil(StretchAssessment.percent(stretchedCentimeters: 9))
+        XCTAssertEqual(imperial, 25, accuracy: 0.000_000_1)
+        XCTAssertNil(StretchAssessment.percent(stretched: 9, marked: 10))
+        XCTAssertEqual(StretchAssessment.mark(for: .imperial).length, 4, accuracy: 0.000_000_1)
+        XCTAssertEqual(StretchAssessment.mark(for: .imperial).abbreviation, "in")
+        XCTAssertEqual(StretchAssessment.mark(for: .metric).length, 10, accuracy: 0.000_000_1)
+        XCTAssertEqual(StretchAssessment.mark(for: .metric).abbreviation, "cm")
     }
 
     func testKindFromBothDirections() {
@@ -69,11 +75,11 @@ final class CSVExportTests: XCTestCase {
             fiberContent: "cotton",
             structure: "Woven",
             type: "Quilting cotton",
-            yardageOnHandYards: "2.5",
-            widthInches: "44",
+            yardageOnHand: "2.5",
+            width: "44",
             isScrap: "no",
-            scrapWidthInches: "",
-            scrapLengthInches: "",
+            scrapWidth: "",
+            scrapLength: "",
             weightGSM: "",
             weightOzPerSqYd: "",
             colorName: "Red",
@@ -93,12 +99,21 @@ final class CSVExportTests: XCTestCase {
             storageKind: "Shelf",
             createdAt: "2026-01-01T00:00:00Z",
             updatedAt: "2026-01-01T00:00:00Z",
-            recordedUseYards: "0.5"
+            recordedUse: "0.5"
         )
-        let csv = CSVExport.render(rows: [row])
-        XCTAssertTrue(csv.hasPrefix("name,fiber_content,structure,"))
-        XCTAssertTrue(csv.contains("\"Sample, Gingham\""))
-        XCTAssertTrue(csv.contains("\"line one\nline two\""))
-        XCTAssertEqual(CSVExport.headers.count, row.columns.count)
+        let imperial = CSVExport.render(rows: [row], system: .imperial)
+        XCTAssertTrue(imperial.hasPrefix("name,fiber_content,structure,type,yardage_on_hand_yards,width_inches,"))
+        XCTAssertTrue(imperial.contains("scrap_width_inches,scrap_length_inches,"))
+        XCTAssertTrue(imperial.contains("recorded_use_yards"))
+        XCTAssertTrue(imperial.contains("\"Sample, Gingham\""))
+        XCTAssertTrue(imperial.contains("\"line one\nline two\""))
+        XCTAssertEqual(CSVExport.headers(system: .imperial).count, row.columns.count)
+        let metric = CSVExport.headers(system: .metric).joined(separator: ",")
+        XCTAssertTrue(metric.contains("yardage_on_hand_meters"))
+        XCTAssertTrue(metric.contains("width_centimeters"))
+        XCTAssertTrue(metric.contains("scrap_width_centimeters"))
+        XCTAssertTrue(metric.contains("scrap_length_centimeters"))
+        XCTAssertTrue(metric.contains("recorded_use_meters"))
+        XCTAssertFalse(metric.contains("yardage_on_hand_yards"))
     }
 }

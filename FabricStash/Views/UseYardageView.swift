@@ -50,7 +50,7 @@ struct UseYardageView: View {
                 Text("\(units.formatLength(yards: fabric.yardage)) on hand")
                     .foregroundStyle(Studio.ink)
                 TextField("Amount to use (\(units.lengthUnit.abbreviation))", text: $amountText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(units.system == .imperial ? .numbersAndPunctuation : .decimalPad)
                 if let deduction {
                     switch deduction {
                     case .applied(let remaining):

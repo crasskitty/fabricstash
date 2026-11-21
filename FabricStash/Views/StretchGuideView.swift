@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StretchGuideView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(UnitSettings.self) private var units
     var onSave: (StretchTestResult) -> Void
 
     @State private var step = 0
@@ -40,19 +41,19 @@ struct StretchGuideView: View {
         case 1:
             measure(
                 title: "Crosswise",
-                body: "Mark 10 cm from selvedge toward selvedge, across the cloth. Hold one end of the mark and pull the other until the fabric resists and you would not want to pull harder. Measure the mark again and type that length.",
+                body: "Mark \(markPhrase) from selvedge toward selvedge, across the cloth. Hold one end of the mark and pull the other until the fabric resists and you would not want to pull harder. Measure the mark again and type that length.",
                 text: $crosswiseText
             )
         case 2:
             recoveryStep(
                 title: "Did it spring back?",
-                body: "Let go. If the mark returns close to 10 cm, recovery is good. If it stays long, wavy, or baggy, recovery is poor.",
+                body: "Let go. If the mark returns close to \(markPhrase), recovery is good. If it stays long, wavy, or baggy, recovery is poor.",
                 selection: $crosswiseRecovery
             )
         case 3:
             measure(
                 title: "Lengthwise",
-                body: "Mark a fresh 10 cm parallel to the selvedge, along the length of the cloth. Pull until it resists, then measure the mark again.",
+                body: "Mark a fresh \(markPhrase) parallel to the selvedge, along the length of the cloth. Pull until it resists, then measure the mark again.",
                 text: $lengthwiseText
             )
         case 4:
@@ -73,7 +74,7 @@ struct StretchGuideView: View {
                 .foregroundStyle(Studio.ink)
             Text("\(AppIdentity.displayName) does not use the phone’s sensors to measure stretch. You mark the cloth, pull it by hand, read a tape, and type what you see.")
                 .foregroundStyle(Studio.ink)
-            Text("Ten centimeters is the mark because the math is easy: if 10 cm becomes 13 cm, that is 30% stretch.")
+            Text(introMark)
                 .foregroundStyle(Studio.ink)
             Text("You will do it twice. First across the fabric (crosswise), then along it (lengthwise). After both, you can save 2-way, 4-way, or no stretch.")
                 .foregroundStyle(Studio.ink)
@@ -82,9 +83,33 @@ struct StretchGuideView: View {
         }
     }
 
+    private var mark: StretchMark { StretchAssessment.mark(for: units.system) }
+
+    private var markPhrase: String {
+        "\(FractionParsing.string(from: mark.length)) \(mark.unitName)"
+    }
+
+    private var introMark: String {
+        switch units.system {
+        case .imperial:
+            "Four inches is the mark because the math is easy: if 4 inches becomes 5 inches, that is 25% stretch."
+        case .metric:
+            "Ten centimeters is the mark because the math is easy: if 10 cm becomes 13 cm, that is 30% stretch."
+        }
+    }
+
+    private func enteredLength(_ text: String) -> Double? {
+        switch units.system {
+        case .imperial:
+            return FractionParsing.value(from: text)
+        case .metric:
+            return NumberParsing.double(from: text)
+        }
+    }
+
     private func measure(title: String, body: String, text: Binding<String>) -> some View {
-        let percent = NumberParsing.double(from: text.wrappedValue).flatMap {
-            StretchAssessment.percent(stretchedCentimeters: $0)
+        let percent = enteredLength(text.wrappedValue).flatMap {
+            StretchAssessment.percent(stretched: $0, marked: mark.length)
         }
         return VStack(alignment: .leading, spacing: 14) {
             Text(title)
@@ -95,20 +120,20 @@ struct StretchGuideView: View {
             Text("The phone is only holding the number. It is not measuring the cloth.")
                 .font(.subheadline)
                 .foregroundStyle(Studio.inkSecondary)
-            TextField("Stretched mark in cm", text: text)
-                .keyboardType(.decimalPad)
+            TextField("Stretched mark in \(mark.abbreviation)", text: text)
+                .keyboardType(units.system == .imperial ? .numbersAndPunctuation : .decimalPad)
                 .padding(12)
                 .background(Studio.card, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .accessibilityLabel("Stretched mark in centimeters")
+                .accessibilityLabel("Stretched mark in \(mark.unitName)")
             if text.wrappedValue.trimmingCharacters(in: .whitespaces).isEmpty {
-                Text("The relaxed mark was \(NumberParsing.string(StretchAssessment.markedCentimeters, fractionDigits: 0)) cm.")
+                Text("The relaxed mark was \(markPhrase).")
                     .foregroundStyle(Studio.inkSecondary)
             } else if let percent {
                 Text("That is \(NumberParsing.string(percent))% stretch.")
                     .font(.headline)
                     .foregroundStyle(Studio.ink)
             } else {
-                Text("That is shorter than 10 cm. Type the length of the mark while it is stretched, not the relaxed length.")
+                Text("That is shorter than \(markPhrase). Type the length of the mark while it is stretched, not the relaxed length.")
                     .foregroundStyle(Studio.madder)
             }
             HStack {
@@ -143,11 +168,11 @@ struct StretchGuideView: View {
     }
 
     private var summary: some View {
-        let crosswise = NumberParsing.double(from: crosswiseText).flatMap {
-            StretchAssessment.percent(stretchedCentimeters: $0)
+        let crosswise = enteredLength(crosswiseText).flatMap {
+            StretchAssessment.percent(stretched: $0, marked: mark.length)
         } ?? 0
-        let lengthwise = NumberParsing.double(from: lengthwiseText).flatMap {
-            StretchAssessment.percent(stretchedCentimeters: $0)
+        let lengthwise = enteredLength(lengthwiseText).flatMap {
+            StretchAssessment.percent(stretched: $0, marked: mark.length)
         } ?? 0
         let result = StretchAssessment.result(
             crosswisePercent: crosswise,

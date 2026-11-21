@@ -16,20 +16,19 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                Picker("Length", selection: lengthBinding) {
-                    ForEach(LengthUnit.allCases) { unit in
-                        Text(unit.title).tag(unit)
+                Picker("Units", selection: systemBinding) {
+                    ForEach(MeasurementSystem.allCases) { system in
+                        Text(system.title).tag(system)
                     }
                 }
-                Picker("Width", selection: widthBinding) {
-                    ForEach(WidthUnit.allCases) { unit in
-                        Text(unit.title).tag(unit)
-                    }
-                }
+                .pickerStyle(.segmented)
+                .accessibilityLabel("Measurement units")
+                Text(units.system.detail)
+                    .foregroundStyle(Studio.inkSecondary)
             } header: {
-                Text("Units")
+                Text("Measurement")
             } footer: {
-                Text("Lengths are kept in yards and widths in inches. The screen converts. 1 yard = 0.9144 m.")
+                Text("One choice sets both. Imperial is inches and yards, including fractions such as 1/2 and 44 1/2. Metric is centimeters and meters. Lengths stay stored in yards and widths in inches. 1 yard = 0.9144 m.")
             }
 
             Section {
@@ -53,7 +52,7 @@ struct SettingsView: View {
 
             Section {
                 ShareLink(
-                    item: CSVFile(text: CSVExport.render(rows: fabrics.map { $0.exportRow() })),
+                    item: CSVFile(text: CSVExport.render(rows: fabrics.map { $0.exportRow(system: units.system) }, system: units.system)),
                     preview: SharePreview(AppIdentity.csvFilename)
                 ) {
                     Label("Export CSV", systemImage: "square.and.arrow.up")
@@ -101,12 +100,8 @@ struct SettingsView: View {
         }
     }
 
-    private var lengthBinding: Binding<LengthUnit> {
-        Binding(get: { units.lengthUnit }, set: { units.lengthUnit = $0 })
-    }
-
-    private var widthBinding: Binding<WidthUnit> {
-        Binding(get: { units.widthUnit }, set: { units.widthUnit = $0 })
+    private var systemBinding: Binding<MeasurementSystem> {
+        Binding(get: { units.system }, set: { units.system = $0 })
     }
 
     private var version: String {

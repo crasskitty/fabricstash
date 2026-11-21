@@ -5,11 +5,11 @@ struct FabricExportRow: Equatable {
     var fiberContent: String
     var structure: String
     var type: String
-    var yardageOnHandYards: String
-    var widthInches: String
+    var yardageOnHand: String
+    var width: String
     var isScrap: String
-    var scrapWidthInches: String
-    var scrapLengthInches: String
+    var scrapWidth: String
+    var scrapLength: String
     var weightGSM: String
     var weightOzPerSqYd: String
     var colorName: String
@@ -29,30 +29,34 @@ struct FabricExportRow: Equatable {
     var storageKind: String
     var createdAt: String
     var updatedAt: String
-    var recordedUseYards: String
+    var recordedUse: String
 
     var columns: [String] {
         [
-            name, fiberContent, structure, type, yardageOnHandYards, widthInches,
-            isScrap, scrapWidthInches, scrapLengthInches, weightGSM, weightOzPerSqYd,
+            name, fiberContent, structure, type, yardageOnHand, width,
+            isScrap, scrapWidth, scrapLength, weightGSM, weightOzPerSqYd,
             colorName, colorHex, printPattern, stretchCrosswisePercent, stretchLengthwisePercent,
             stretch, recovery, source, pricePaid, currencyCode, prewashed, careNotes, tags,
-            storageLocation, storageKind, createdAt, updatedAt, recordedUseYards
+            storageLocation, storageKind, createdAt, updatedAt, recordedUse
         ]
     }
 }
 
 enum CSVExport {
-    static let headers = [
-        "name", "fiber_content", "structure", "type", "yardage_on_hand_yards", "width_inches",
-        "is_scrap", "scrap_width_inches", "scrap_length_inches", "weight_gsm", "weight_oz_per_sq_yd",
-        "color_name", "color_hex", "print_pattern", "stretch_crosswise_percent", "stretch_lengthwise_percent",
-        "stretch", "recovery", "source", "price_paid", "currency_code", "prewashed", "care_notes", "tags",
-        "storage_location", "storage_kind", "created_at", "updated_at", "recorded_use_yards"
-    ]
+    static func headers(system: MeasurementSystem) -> [String] {
+        let length = system == .imperial ? "yards" : "meters"
+        let width = system == .imperial ? "inches" : "centimeters"
+        return [
+            "name", "fiber_content", "structure", "type", "yardage_on_hand_\(length)", "width_\(width)",
+            "is_scrap", "scrap_width_\(width)", "scrap_length_\(width)", "weight_gsm", "weight_oz_per_sq_yd",
+            "color_name", "color_hex", "print_pattern", "stretch_crosswise_percent", "stretch_lengthwise_percent",
+            "stretch", "recovery", "source", "price_paid", "currency_code", "prewashed", "care_notes", "tags",
+            "storage_location", "storage_kind", "created_at", "updated_at", "recorded_use_\(length)"
+        ]
+    }
 
-    static func render(rows: [FabricExportRow]) -> String {
-        var lines = [line(headers)]
+    static func render(rows: [FabricExportRow], system: MeasurementSystem) -> String {
+        var lines = [line(headers(system: system))]
         lines.append(contentsOf: rows.map { line($0.columns) })
         return lines.joined(separator: "\n") + "\n"
     }

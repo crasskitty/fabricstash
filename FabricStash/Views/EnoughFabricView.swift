@@ -26,9 +26,9 @@ struct EnoughFabricView: View {
         List {
             Section {
                 TextField("Length needed (\(units.lengthUnit.abbreviation))", text: $lengthText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(measurementKeyboard)
                 TextField("Width needed (\(units.widthUnit.abbreviation))", text: $widthText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(measurementKeyboard)
                 Text("Bolts need enough length left and a wide enough piece. Scraps are checked on their own width and length, turned if that fits better.")
                     .font(.footnote)
                     .foregroundStyle(Studio.inkSecondary)
@@ -121,6 +121,10 @@ struct EnoughFabricView: View {
         case .scrapEdge(let inches):
             return "Short by \(units.formatWidth(inches: inches)) along the scrap."
         }
+    }
+
+    private var measurementKeyboard: UIKeyboardType {
+        units.system == .imperial ? .numbersAndPunctuation : .decimalPad
     }
 
     private func dismissKeyboard() {

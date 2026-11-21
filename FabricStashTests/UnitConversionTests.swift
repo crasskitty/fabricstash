@@ -43,4 +43,42 @@ final class UnitConversionTests: XCTestCase {
         XCTAssertEqual(UnitConverter.ozPerSqYard(fromGSM: gsm), ounces, accuracy: 0.000_000_1)
         XCTAssertEqual(UnitConverter.gsm(fromOzPerSqYard: 0), 0, accuracy: 0.000_000_1)
     }
+
+    func testOneSystemSetsBothUnits() {
+        XCTAssertEqual(MeasurementSystem.imperial.lengthUnit, .yards)
+        XCTAssertEqual(MeasurementSystem.imperial.widthUnit, .inches)
+        XCTAssertEqual(MeasurementSystem.metric.lengthUnit, .meters)
+        XCTAssertEqual(MeasurementSystem.metric.widthUnit, .centimeters)
+    }
+
+    func testFractionalInchEntry() {
+        XCTAssertEqual(FractionParsing.value(from: "1/2") ?? -1, 0.5, accuracy: 0.000_000_1)
+        XCTAssertEqual(FractionParsing.value(from: "3/8") ?? -1, 0.375, accuracy: 0.000_000_1)
+        XCTAssertEqual(FractionParsing.value(from: "44 1/2") ?? -1, 44.5, accuracy: 0.000_000_1)
+        XCTAssertEqual(FractionParsing.value(from: "44-1/2") ?? -1, 44.5, accuracy: 0.000_000_1)
+        XCTAssertEqual(FractionParsing.value(from: "44.5") ?? -1, 44.5, accuracy: 0.000_000_1)
+        XCTAssertEqual(FractionParsing.string(from: 44.5), "44 1/2")
+        XCTAssertEqual(FractionParsing.string(from: 0.375), "3/8")
+        XCTAssertEqual(FractionParsing.string(from: 0.5), "1/2")
+    }
+
+    func testTogglingUnitsDoesNotDriftCanonicalValues() {
+        let inches = 44.5
+        let yards = 2.5
+        let centimeters = UnitConverter.displayWidth(inches, unit: .centimeters)
+        let meters = UnitConverter.displayLength(yards, unit: .meters)
+        XCTAssertEqual(UnitConverter.inches(fromDisplay: centimeters, unit: .centimeters), inches, accuracy: 0.000_000_1)
+        XCTAssertEqual(UnitConverter.yards(fromDisplay: meters, unit: .meters), yards, accuracy: 0.000_000_1)
+
+        let imperialText = MeasurementEdge.widthText(inches: inches, system: .imperial)
+        XCTAssertEqual(MeasurementEdge.resolvedInches(text: imperialText, canonical: inches, system: .imperial) ?? -1, inches, accuracy: 0.000_000_1)
+        let metricText = MeasurementEdge.widthText(inches: inches, system: .metric)
+        XCTAssertEqual(MeasurementEdge.resolvedInches(text: metricText, canonical: inches, system: .metric) ?? -1, inches, accuracy: 0.000_000_1)
+
+        let shownYards = MeasurementEdge.lengthText(yards: yards, system: .metric)
+        let parsedYards = MeasurementEdge.yards(from: shownYards, system: .metric) ?? -1
+        let backToImperial = MeasurementEdge.lengthText(yards: parsedYards, system: .imperial)
+        XCTAssertEqual(MeasurementEdge.yards(from: backToImperial, system: .imperial) ?? -1, yards, accuracy: 0.000_000_1)
+        XCTAssertEqual(MeasurementEdge.resolvedYards(text: shownYards, canonical: yards, system: .metric) ?? -1, yards, accuracy: 0.000_000_1)
+    }
 }

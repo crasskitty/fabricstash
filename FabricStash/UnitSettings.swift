@@ -5,50 +5,50 @@ import Observation
 @Observable
 final class UnitSettings {
     private enum Key {
-        static let length = "fabricstash.unit.length"
-        static let width = "fabricstash.unit.width"
+        static let system = "fabricstash.unit.system"
     }
 
-    var lengthUnit: LengthUnit {
-        didSet { UserDefaults.standard.set(lengthUnit.rawValue, forKey: Key.length) }
+    var system: MeasurementSystem {
+        didSet { UserDefaults.standard.set(system.rawValue, forKey: Key.system) }
     }
 
-    var widthUnit: WidthUnit {
-        didSet { UserDefaults.standard.set(widthUnit.rawValue, forKey: Key.width) }
-    }
+    var lengthUnit: LengthUnit { system.lengthUnit }
+    var widthUnit: WidthUnit { system.widthUnit }
 
     init() {
-        let storedLength = UserDefaults.standard.string(forKey: Key.length)
-        let storedWidth = UserDefaults.standard.string(forKey: Key.width)
-        lengthUnit = storedLength.flatMap(LengthUnit.init(rawValue:)) ?? .yards
-        widthUnit = storedWidth.flatMap(WidthUnit.init(rawValue:)) ?? .inches
+        let stored = UserDefaults.standard.string(forKey: Key.system)
+        system = stored.flatMap(MeasurementSystem.init(rawValue:)) ?? .imperial
     }
 
     func formatLength(yards: Double) -> String {
-        let shown = UnitConverter.displayLength(yards, unit: lengthUnit)
-        return "\(NumberParsing.string(shown)) \(lengthUnit.abbreviation)"
+        "\(MeasurementEdge.lengthText(yards: yards, system: system)) \(lengthUnit.abbreviation)"
     }
 
     func formatWidth(inches: Double) -> String {
-        let shown = UnitConverter.displayWidth(inches, unit: widthUnit)
-        return "\(NumberParsing.string(shown)) \(widthUnit.abbreviation)"
+        "\(MeasurementEdge.widthText(inches: inches, system: system)) \(widthUnit.abbreviation)"
     }
 
     func yards(fromDisplay text: String) -> Double? {
-        guard let value = NumberParsing.double(from: text) else { return nil }
-        return UnitConverter.yards(fromDisplay: value, unit: lengthUnit)
+        MeasurementEdge.yards(from: text, system: system)
     }
 
     func inches(fromDisplay text: String) -> Double? {
-        guard let value = NumberParsing.double(from: text) else { return nil }
-        return UnitConverter.inches(fromDisplay: value, unit: widthUnit)
+        MeasurementEdge.inches(from: text, system: system)
+    }
+
+    func resolvedYards(text: String, canonical: Double?) -> Double? {
+        MeasurementEdge.resolvedYards(text: text, canonical: canonical, system: system)
+    }
+
+    func resolvedInches(text: String, canonical: Double?) -> Double? {
+        MeasurementEdge.resolvedInches(text: text, canonical: canonical, system: system)
     }
 
     func lengthField(yards: Double) -> String {
-        NumberParsing.string(UnitConverter.displayLength(yards, unit: lengthUnit))
+        MeasurementEdge.lengthText(yards: yards, system: system)
     }
 
     func widthField(inches: Double) -> String {
-        NumberParsing.string(UnitConverter.displayWidth(inches, unit: widthUnit))
+        MeasurementEdge.widthText(inches: inches, system: system)
     }
 }

@@ -49,7 +49,7 @@ struct GalleryView: View {
                     Button("Locations", systemImage: "archivebox") { sheets.locations() }
                     Button("Projects", systemImage: "scissors") { sheets.projects() }
                     ShareLink(
-                        item: CSVFile(text: CSVExport.render(rows: fabrics.map { $0.exportRow() })),
+                        item: CSVFile(text: CSVExport.render(rows: fabrics.map { $0.exportRow(system: units.system) }, system: units.system)),
                         preview: SharePreview(AppIdentity.csvFilename)
                     ) {
                         Label("Export CSV", systemImage: "square.and.arrow.up")
@@ -339,7 +339,7 @@ private struct FilterSheet: View {
             }
             Section {
                 TextField("Minimum on hand (\(units.lengthUnit.abbreviation))", text: $minimumText)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(units.system == .imperial ? .numbersAndPunctuation : .decimalPad)
                 Text("Compared with yardage still on the shelf, after cuts.")
                     .font(.footnote)
                     .foregroundStyle(Studio.inkSecondary)

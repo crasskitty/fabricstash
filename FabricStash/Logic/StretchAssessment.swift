@@ -41,18 +41,32 @@ struct StretchTestResult: Equatable {
     var recovery: Recovery
 }
 
+struct StretchMark: Equatable {
+    var length: Double
+    var unitName: String
+    var abbreviation: String
+}
+
 /// A tape-measure test. The phone does not measure stretch.
 enum StretchAssessment {
-    static let markedCentimeters = 10.0
+    static let imperialMarkInches = 4.0
+    static let metricMarkCentimeters = 10.0
     /// Below this, the cloth is treated as not really stretching in that direction.
     static let meaningfulPercent = 15.0
 
-    static func percent(stretchedCentimeters: Double, markedCentimeters: Double = markedCentimeters) -> Double? {
-        guard stretchedCentimeters.isFinite, markedCentimeters > 0, markedCentimeters.isFinite else {
-            return nil
+    static func mark(for system: MeasurementSystem) -> StretchMark {
+        switch system {
+        case .imperial:
+            StretchMark(length: imperialMarkInches, unitName: "inches", abbreviation: "in")
+        case .metric:
+            StretchMark(length: metricMarkCentimeters, unitName: "centimeters", abbreviation: "cm")
         }
-        guard stretchedCentimeters + 0.000_1 >= markedCentimeters else { return nil }
-        return (stretchedCentimeters - markedCentimeters) / markedCentimeters * 100
+    }
+
+    static func percent(stretched: Double, marked: Double) -> Double? {
+        guard stretched.isFinite, marked > 0, marked.isFinite else { return nil }
+        guard stretched + 0.000_1 >= marked else { return nil }
+        return (stretched - marked) / marked * 100
     }
 
     static func kind(crosswisePercent: Double, lengthwisePercent: Double) -> StretchKind {

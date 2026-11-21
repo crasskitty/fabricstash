@@ -179,23 +179,28 @@ final class Fabric {
         )
     }
 
-    func exportRow() -> FabricExportRow {
+    func exportRow(system: MeasurementSystem) -> FabricExportRow {
         let ounces: String
         if let weightGSM {
             ounces = CSVExport.number(UnitConverter.ozPerSqYard(fromGSM: weightGSM))
         } else {
             ounces = ""
         }
+        let length = UnitConverter.displayLength(yardage, unit: system.lengthUnit)
+        let width = UnitConverter.displayWidth(widthInches, unit: system.widthUnit)
+        let scrapWidth = UnitConverter.displayWidth(scrapWidthInches, unit: system.widthUnit)
+        let scrapLength = UnitConverter.displayWidth(scrapLengthInches, unit: system.widthUnit)
+        let used = UnitConverter.displayLength(recordedUseYards, unit: system.lengthUnit)
         return FabricExportRow(
             name: name,
             fiberContent: fiberContent,
             structure: structure.title,
             type: typeTitle,
-            yardageOnHandYards: CSVExport.number(yardage),
-            widthInches: CSVExport.number(widthInches),
+            yardageOnHand: CSVExport.number(length),
+            width: CSVExport.number(width),
             isScrap: isScrap ? "yes" : "no",
-            scrapWidthInches: isScrap ? CSVExport.number(scrapWidthInches) : "",
-            scrapLengthInches: isScrap ? CSVExport.number(scrapLengthInches) : "",
+            scrapWidth: isScrap ? CSVExport.number(scrapWidth) : "",
+            scrapLength: isScrap ? CSVExport.number(scrapLength) : "",
             weightGSM: weightGSM.map(CSVExport.number) ?? "",
             weightOzPerSqYd: ounces,
             colorName: colorName,
@@ -215,7 +220,7 @@ final class Fabric {
             storageKind: location?.kind.title ?? "",
             createdAt: CSVExport.iso(createdAt),
             updatedAt: CSVExport.iso(updatedAt),
-            recordedUseYards: CSVExport.number(recordedUseYards)
+            recordedUse: CSVExport.number(used)
         )
     }
 }
