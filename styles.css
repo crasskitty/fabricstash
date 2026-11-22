@@ -1,0 +1,233 @@
+:root {
+  color-scheme: light dark;
+  --linen: #f6f1e8;
+  --card: #fffcf7;
+  --ink: #2a2420;
+  --muted: #5c534c;
+  --madder: #9c4a32;
+  --madder-fill: #9c4a32;
+  --on-madder: #fffcf7;
+  --green: #3e5c4e;
+  --line: rgba(42, 36, 32, 0.12);
+  --serif: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  --sans: "Avenir Next", "Segoe UI", sans-serif;
+  --shadow: 0 1px 0 var(--line);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --linen: #1c1814;
+    --card: #2c2622;
+    --ink: #f6f1e8;
+    --muted: #d4cbbf;
+    --madder: #e7a090;
+    --line: rgba(246, 241, 232, 0.14);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--linen);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+a { color: var(--madder); }
+
+.banner {
+  margin: 12px 0 8px;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.banner strong { color: var(--ink); }
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 4px;
+}
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: 0; }
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  flex: 1;
+}
+
+h2 { margin: 0 0 8px; font-size: 1.7rem; }
+
+.icon-button, button, .button {
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.icon-button { padding: 8px 10px; }
+
+.madder, .green {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.madder { background: var(--madder-fill); color: var(--on-madder); }
+.green { background: var(--green); color: var(--on-madder); }
+
+.stack { display: grid; gap: 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.muted { color: var(--muted); }
+.grow { flex: 1; }
+
+.search, input, select, textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+textarea { min-height: 88px; resize: vertical; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+
+.swatch {
+  text-align: left;
+  padding: 10px;
+  border-radius: 16px;
+  background: var(--card);
+  width: 100%;
+}
+
+.swatch.selected { border-color: var(--madder); border-width: 2px; }
+
+.face {
+  height: 132px;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.badge {
+  background: var(--green);
+  color: var(--on-madder);
+  border-radius: 999px;
+  padding: 3px 7px;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.swatch h3 {
+  margin: 8px 0 4px;
+  font-size: 1.05rem;
+}
+
+.amount { display: flex; gap: 8px; align-items: center; font-size: 0.95rem; }
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+}
+
+.menu {
+  position: relative;
+}
+
+.menu-panel {
+  position: absolute;
+  z-index: 2;
+  top: 42px;
+  left: 0;
+  min-width: 220px;
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.split {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .split.with-detail { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); align-items: start; }
+}
+
+.empty {
+  max-width: 460px;
+  margin: 32px auto;
+  text-align: center;
+}
+
+.notice {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--madder);
+}
+
+label { display: grid; gap: 4px; font-size: 0.92rem; color: var(--muted); }
+
+.choice { display: flex; gap: 8px; }
+.choice button[aria-pressed="true"] {
+  background: var(--madder-fill);
+  color: var(--on-madder);
+  border-color: transparent;
+}
+
+.use { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+
+@media (max-width: 700px) {
+  h1 { font-size: 1.7rem; }
+}
