@@ -2,6 +2,8 @@
 
 FabricStash is a local iOS catalog for a sewist's fabric. Publisher: Ashley Neale. Version 1 keeps the shelf on the device: no account, no CloudKit, no analytics, and no tracking.
 
+A browser preview of the sample shelf is published at <https://crasskitty.github.io/fabricstash/>. It uses the same rules as the iOS app for search, “Do I have enough?”, yardage cuts, the imperial/metric switch, and the free cap of 25. The page stores that shelf in the browser only. It does not use the camera and it cannot sell the StoreKit unlock. The iOS app is still what you run from `FabricStash.xcodeproj`. The preview source is `preview/`.
+
 The in-app name is the constant `AppIdentity.displayName` in `FabricStash/AppIdentity.swift`. The home-screen name is `CFBundleDisplayName` in `FabricStash/Info.plist` (also set as `INFOPLIST_KEY_CFBundleDisplayName` on the target). The Xcode project, scheme, and target are named FabricStash.
 
 | | |
