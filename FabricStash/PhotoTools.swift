@@ -146,7 +146,7 @@ extension PixelSampler {
         var height: Int
     }
 
-    /// Draws the image in display orientation, with the first byte row at the top.
+    /// Draws the image in display orientation. UIKit's rendered CGImage already stores the top row first, so a vertical flip would sample the opposite edge.
     private static func uprightBitmap(of image: UIImage, maxEdge: CGFloat) -> UprightBitmap? {
         let pixelWidth = max(1, image.size.width * image.scale)
         let pixelHeight = max(1, image.size.height * image.scale)
@@ -171,8 +171,6 @@ extension PixelSampler {
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
         ) else { return nil }
-        context.translateBy(x: 0, y: CGFloat(height))
-        context.scaleBy(x: 1, y: -1)
         context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         return UprightBitmap(bytes: bytes, width: width, height: height)
     }
