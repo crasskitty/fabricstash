@@ -4,37 +4,31 @@ import UIKit
 enum StudioChrome {
     static func install() {
         let ink = UIColor(named: "Ink") ?? .label
-        let linen = UIColor(named: "Linen") ?? .systemBackground
-        let largeBase = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle)
-        let inlineBase = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .headline)
-        let large = UIFont(descriptor: largeBase.withDesign(.serif) ?? largeBase, size: 0)
-        let inline = UIFont(descriptor: inlineBase.withDesign(.serif) ?? inlineBase, size: 0)
+        let paper = UIColor(named: "Paper") ?? .systemBackground
+        let accent = UIColor(named: "Accent")
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = linen
+        appearance.backgroundColor = paper
         appearance.shadowColor = .clear
-        appearance.titleTextAttributes = [.foregroundColor: ink, .font: inline]
-        appearance.largeTitleTextAttributes = [.foregroundColor: ink, .font: large]
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        UINavigationBar.appearance().compactAppearance = appearance
+        appearance.titleTextAttributes = [.foregroundColor: ink]
+        appearance.largeTitleTextAttributes = [.foregroundColor: ink]
+        let bar = UINavigationBar.appearance()
+        bar.standardAppearance = appearance
+        bar.scrollEdgeAppearance = appearance
+        bar.compactAppearance = appearance
+        bar.tintColor = accent
     }
 }
 
 enum Studio {
-    static let linen = Color("Linen")
+    static let paper = Color("Paper")
     static let card = Color("Card")
     static let ink = Color("Ink")
     static let inkSecondary = Color("InkSecondary")
-    static let madder = Color("Madder")
-    static let madderFill = Color("MadderFill")
-    static let onMadder = Color("OnMadder")
-    static let sewingGreen = Color("SewingGreen")
-    static let sewingGreenFill = Color("SewingGreenFill")
-
-    static func serif(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
-        .system(style, design: .serif).weight(weight)
-    }
+    static let accent = Color("Accent")
+    static let accentFill = Color("AccentFill")
+    static let onAccent = Color("OnAccent")
+    static let caution = Color("Caution")
 }
 
 extension Color {
@@ -49,9 +43,9 @@ struct StudioCard: ViewModifier {
         content
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Studio.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(Studio.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .stroke(Studio.ink.opacity(0.08), lineWidth: 1)
             )
     }
@@ -63,36 +57,37 @@ extension View {
     }
 
     func studioScreen() -> some View {
-        background(Studio.linen.ignoresSafeArea())
+        background(Studio.paper.ignoresSafeArea())
     }
 }
 
-struct MadderButtonStyle: ButtonStyle {
+struct AccentButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.semibold))
-            .foregroundStyle(Studio.onMadder)
+            .foregroundStyle(Studio.onAccent)
             .padding(.vertical, 14)
             .padding(.horizontal, 18)
             .frame(maxWidth: .infinity)
             .background(
-                Studio.madderFill.opacity(configuration.isPressed ? 0.86 : 1),
+                Studio.accentFill.opacity(configuration.isPressed ? 0.86 : 1),
                 in: RoundedRectangle(cornerRadius: 14, style: .continuous)
             )
     }
 }
 
-struct GreenButtonStyle: ButtonStyle {
+struct QuietButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.semibold))
-            .foregroundStyle(Studio.onMadder)
+            .foregroundStyle(Studio.ink.opacity(configuration.isPressed ? 0.7 : 1))
             .padding(.vertical, 14)
             .padding(.horizontal, 18)
             .frame(maxWidth: .infinity)
-            .background(
-                Studio.sewingGreenFill.opacity(configuration.isPressed ? 0.86 : 1),
-                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .background(Studio.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Studio.ink.opacity(0.12), lineWidth: 1)
             )
     }
 }

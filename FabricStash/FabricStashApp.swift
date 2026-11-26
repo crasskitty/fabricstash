@@ -15,7 +15,7 @@ struct FabricStashApp: App {
             RootView()
                 .environment(purchases)
                 .environment(units)
-                .tint(Studio.madder)
+                .tint(Studio.accent)
                 .task { await purchases.start() }
         }
         .modelContainer(ModelStore.container)

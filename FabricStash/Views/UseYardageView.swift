@@ -55,14 +55,14 @@ struct UseYardageView: View {
                     switch deduction {
                     case .applied(let remaining):
                         Text("\(units.formatLength(yards: remaining)) would remain.")
-                            .foregroundStyle(Studio.sewingGreen)
+                            .foregroundStyle(Studio.accent)
                     case .rejected(let reason):
                         Text(warning(reason))
-                            .foregroundStyle(Studio.madder)
+                            .foregroundStyle(Studio.caution)
                     }
                 } else if !amountText.trimmingCharacters(in: .whitespaces).isEmpty {
                     Text("Enter the amount as a number.")
-                        .foregroundStyle(Studio.madder)
+                        .foregroundStyle(Studio.caution)
                 }
             } header: {
                 Text(fabric.name)

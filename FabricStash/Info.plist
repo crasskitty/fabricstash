@@ -27,7 +27,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>FabricStash uses the camera so you can photograph fabric for your shelf.</string>
+	<string>FabricStash uses the camera so you can photograph a fabric and pick its color from the cloth.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>FabricStash uses your photo library so you can add pictures of fabric you already took.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -38,7 +38,7 @@
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
-		<string>Linen</string>
+		<string>Paper</string>
 	</dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

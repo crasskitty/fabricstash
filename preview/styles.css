@@ -1,27 +1,29 @@
 :root {
   color-scheme: light dark;
-  --linen: #f6f1e8;
-  --card: #fffcf7;
-  --ink: #2a2420;
-  --muted: #5c534c;
-  --madder: #9c4a32;
-  --madder-fill: #9c4a32;
-  --on-madder: #fffcf7;
-  --green: #3e5c4e;
-  --line: rgba(42, 36, 32, 0.12);
-  --serif: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  --paper: #e6eef0;
+  --card: #f7fbfc;
+  --ink: #1e2c31;
+  --muted: #4e6068;
+  --accent: #215e70;
+  --accent-fill: #215e70;
+  --on-accent: #f7fbfc;
+  --caution: #8b3a48;
+  --line: rgba(30, 44, 49, 0.12);
   --sans: "Avenir Next", "Segoe UI", sans-serif;
   --shadow: 0 1px 0 var(--line);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --linen: #1c1814;
-    --card: #2c2622;
-    --ink: #f6f1e8;
-    --muted: #d4cbbf;
-    --madder: #e7a090;
-    --line: rgba(246, 241, 232, 0.14);
+    --paper: #152024;
+    --card: #1c262b;
+    --ink: #e7f1f3;
+    --muted: #a8bcc3;
+    --accent: #9ed0dc;
+    --accent-fill: #2c6e82;
+    --on-accent: #f7fbfc;
+    --caution: #f3c1c8;
+    --line: rgba(231, 241, 243, 0.14);
   }
 }
 
@@ -30,7 +32,7 @@
 html, body {
   margin: 0;
   min-height: 100%;
-  background: var(--linen);
+  background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 17px;
@@ -43,7 +45,7 @@ body {
   padding: 0 16px 48px;
 }
 
-a { color: var(--madder); }
+a { color: var(--accent); }
 
 .banner {
   margin: 12px 0 8px;
@@ -64,7 +66,7 @@ a { color: var(--madder); }
   padding: 8px 0 4px;
 }
 
-h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: 0; }
+h1, h2, h3 { font-family: var(--sans); font-weight: 650; letter-spacing: -0.02em; }
 
 h1 {
   margin: 0;
@@ -86,19 +88,19 @@ h2 { margin: 0 0 8px; font-size: 1.7rem; }
 
 .icon-button { padding: 8px 10px; }
 
-.madder, .green {
+.accent, .quiet {
   display: inline-flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  border: 0;
   border-radius: 14px;
   padding: 14px 18px;
   font-weight: 650;
   text-decoration: none;
 }
 
-.madder { background: var(--madder-fill); color: var(--on-madder); }
-.green { background: var(--green); color: var(--on-madder); }
+.accent { background: var(--accent-fill); color: var(--on-accent); border: 0; }
+.quiet { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
 
 .stack { display: grid; gap: 12px; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -120,7 +122,7 @@ textarea { min-height: 88px; resize: vertical; }
 .card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 16px;
 }
 
@@ -137,9 +139,10 @@ textarea { min-height: 88px; resize: vertical; }
   width: 100%;
 }
 
-.swatch.selected { border-color: var(--madder); border-width: 2px; }
+.swatch.selected { border-color: var(--accent); border-width: 2px; }
 
 .face {
+  display: block;
   height: 132px;
   border-radius: 12px;
   position: relative;
@@ -155,8 +158,12 @@ textarea { min-height: 88px; resize: vertical; }
 }
 
 .badge {
-  background: var(--green);
-  color: var(--on-madder);
+  display: inline-flex;
+  width: max-content;
+  justify-self: start;
+  align-items: center;
+  background: var(--accent-fill);
+  color: var(--on-accent);
   border-radius: 999px;
   padding: 3px 7px;
   font-size: 0.72rem;
@@ -214,15 +221,16 @@ textarea { min-height: 88px; resize: vertical; }
   padding: 10px 12px;
   border-radius: 12px;
   background: var(--card);
-  border: 1px solid var(--madder);
+  border: 1px solid var(--caution);
+  color: var(--caution);
 }
 
 label { display: grid; gap: 4px; font-size: 0.92rem; color: var(--muted); }
 
 .choice { display: flex; gap: 8px; }
 .choice button[aria-pressed="true"] {
-  background: var(--madder-fill);
-  color: var(--on-madder);
+  background: var(--accent-fill);
+  color: var(--on-accent);
   border-color: transparent;
 }
 
@@ -231,3 +239,77 @@ label { display: grid; gap: 4px; font-size: 0.92rem; color: var(--muted); }
 @media (max-width: 700px) {
   h1 { font-size: 1.7rem; }
 }
+
+.sampler {
+  position: relative;
+  height: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  touch-action: none;
+}
+
+.sampler img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.crosshair {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+}
+
+.crosshair::before { left: 12px; top: 6px; width: 1px; height: 12px; }
+.crosshair::after { left: 6px; top: 12px; width: 12px; height: 1px; }
+
+.loupe {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  background-repeat: no-repeat;
+}
+
+.chip {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  flex: none;
+}
+
+.file input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.file { cursor: pointer; }
+
+.face img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.face.tall { height: 280px; }
+
+::selection { background: #9ed0dc; color: #1e2c31; }

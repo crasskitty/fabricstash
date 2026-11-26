@@ -46,7 +46,7 @@ struct FabricDetailView: View {
                 }
                 VStack(alignment: .leading, spacing: 6) {
                     Text(fabric.name)
-                        .font(Studio.serif(.largeTitle, weight: .semibold))
+                        .font(.largeTitle.weight(.semibold))
                         .foregroundStyle(Studio.ink)
                     Text(headlineAmount(fabric))
                         .font(.title3)
@@ -57,9 +57,9 @@ struct FabricDetailView: View {
                 history(fabric)
                 VStack(spacing: 10) {
                     Button("Mark yardage used") { showUse = true }
-                        .buttonStyle(MadderButtonStyle())
+                        .buttonStyle(AccentButtonStyle())
                     Button("Walk through a stretch test") { showStretch = true }
-                        .buttonStyle(GreenButtonStyle())
+                        .buttonStyle(QuietButtonStyle())
                     Button("Edit fabric") { showEditor = true }
                         .buttonStyle(.bordered)
                         .frame(maxWidth: .infinity)
@@ -107,7 +107,7 @@ struct FabricDetailView: View {
         let ordered = fabric.orderedPhotos
         if ordered.isEmpty {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(hex: fabric.colorHex) ?? Studio.sewingGreen.opacity(0.3))
+                .fill(Color(hex: fabric.colorHex) ?? Studio.paper)
                 .frame(height: 220)
                 .accessibilityLabel(fabric.colorName.isEmpty ? "No photo" : "No photo. Color \(fabric.colorName)")
         } else {
@@ -144,13 +144,8 @@ struct FabricDetailView: View {
                     RoundedRectangle(cornerRadius: 6).stroke(Studio.ink.opacity(0.15), lineWidth: 1)
                 )
                 .accessibilityLabel(fabric.colorName.isEmpty ? "Color swatch" : "Color \(fabric.colorName)")
-            VStack(alignment: .leading, spacing: 2) {
-                Text(fabric.colorName.isEmpty ? "No color name" : fabric.colorName)
-                    .foregroundStyle(Studio.ink)
-                Text(fabric.colorHex.isEmpty ? "No hex" : fabric.colorHex)
-                    .font(.subheadline)
-                    .foregroundStyle(Studio.inkSecondary)
-            }
+            Text(colorLabel(fabric))
+                .foregroundStyle(Studio.ink)
             Spacer()
             Text(fabric.printPattern.isEmpty ? "No print noted" : fabric.printPattern)
                 .font(.subheadline)
@@ -204,7 +199,7 @@ struct FabricDetailView: View {
     private func history(_ fabric: Fabric) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Cuts")
-                .font(Studio.serif(.title3, weight: .semibold))
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(Studio.ink)
             if fabric.uses.isEmpty {
                 Text("No yardage has been marked used yet.")
@@ -233,6 +228,12 @@ struct FabricDetailView: View {
             }
         }
         .studioCard()
+    }
+
+    private func colorLabel(_ fabric: Fabric) -> String {
+        if !fabric.colorName.isEmpty { return fabric.colorName }
+        if !fabric.colorHex.isEmpty { return "Sampled color" }
+        return "No color yet"
     }
 
     private func headlineAmount(_ fabric: Fabric) -> String {

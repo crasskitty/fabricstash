@@ -23,7 +23,7 @@ enum PhotoEncoding {
     }
 
     static func solidJPEG(hex: String, size: CGFloat = 640) -> Data {
-        let rgb = RGB(hex: hex) ?? RGB(r: 0.61, g: 0.29, b: 0.20)
+        let rgb = RGB(hex: hex) ?? RGB(r: 0.129, g: 0.369, b: 0.439)
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
         format.opaque = true
@@ -109,6 +109,70 @@ enum PhotoColor {
     static func suggestion(for data: Data) -> ColorSuggestion? {
         guard let image = UIImage(data: data) else { return nil }
         return ColorNaming.suggestion(from: PixelSampler.pixels(from: image))
+    }
+}
+
+extension PixelSampler {
+    /// Average of a small neighborhood around a normalized point. The origin is the top left.
+    static func color(in image: UIImage, atNormalized point: CGPoint, radius: Int = 2) -> RGB? {
+        let clamped = CGPoint(x: min(1, max(0, point.x)), y: min(1, max(0, point.y)))
+        guard let bitmap = uprightBitmap(of: image, maxEdge: 640) else { return nil }
+        let x = Int((clamped.x * CGFloat(bitmap.width - 1)).rounded())
+        let y = Int((clamped.y * CGFloat(bitmap.height - 1)).rounded())
+        var red = 0.0
+        var green = 0.0
+        var blue = 0.0
+        var count = 0.0
+        for dy in -radius...radius {
+            for dx in -radius...radius {
+                let px = min(bitmap.width - 1, max(0, x + dx))
+                let py = min(bitmap.height - 1, max(0, y + dy))
+                let index = (py * bitmap.width + px) * 4
+                let alpha = Double(bitmap.bytes[index + 3]) / 255
+                guard alpha >= 0.5 else { continue }
+                red += Double(bitmap.bytes[index]) / 255
+                green += Double(bitmap.bytes[index + 1]) / 255
+                blue += Double(bitmap.bytes[index + 2]) / 255
+                count += 1
+            }
+        }
+        guard count > 0 else { return nil }
+        return RGB(r: red / count, g: green / count, b: blue / count)
+    }
+
+    private struct UprightBitmap {
+        var bytes: [UInt8]
+        var width: Int
+        var height: Int
+    }
+
+    /// Draws the image in display orientation. UIKit's rendered CGImage already stores the top row first, so a vertical flip would sample the opposite edge.
+    private static func uprightBitmap(of image: UIImage, maxEdge: CGFloat) -> UprightBitmap? {
+        let pixelWidth = max(1, image.size.width * image.scale)
+        let pixelHeight = max(1, image.size.height * image.scale)
+        let longest = max(pixelWidth, pixelHeight)
+        let ratio = longest > maxEdge ? maxEdge / longest : 1
+        let width = max(1, Int((pixelWidth * ratio).rounded(.down)))
+        let height = max(1, Int((pixelHeight * ratio).rounded(.down)))
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let rendered = UIGraphicsImageRenderer(size: CGSize(width: width, height: height), format: format).image { _ in
+            image.draw(in: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
+        }
+        guard let cgImage = rendered.cgImage else { return nil }
+        var bytes = [UInt8](repeating: 0, count: width * height * 4)
+        guard let context = CGContext(
+            data: &bytes,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: width * 4,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else { return nil }
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        return UprightBitmap(bytes: bytes, width: width, height: height)
     }
 }
 

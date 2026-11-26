@@ -108,8 +108,8 @@ struct FabricEditorView: View {
     @State private var showCamera = false
     @State private var showStretch = false
     @State private var showPaywall = false
-    @State private var suggestion: ColorSuggestion?
-    @State private var suggestionNote: String?
+    @State private var samplePoint: CGPoint?
+    @State private var automaticColorName: String?
     @State private var saveError: String?
     @State private var newLocationName = ""
     @State private var newLocationKind: StorageKind = .bin
@@ -117,7 +117,7 @@ struct FabricEditorView: View {
 
     private enum EditorField: Hashable {
         case name, fiber, customType, yardage, width, scrapWidth, scrapLength
-        case gsm, oz, colorName, hex, printPattern
+        case gsm, oz, colorName, printPattern
         case crosswise, lengthwise, source, price, currency, care, tags, newLocation
     }
 
@@ -127,14 +127,13 @@ struct FabricEditorView: View {
             identitySection
             amountSection
             weightSection
-            colorSection
             stretchSection
             sourceSection
             locationSection
             if let reason = saveBlockReason {
                 Section {
                     Text(reason)
-                        .foregroundStyle(Studio.madder)
+                        .foregroundStyle(Studio.caution)
                 }
             }
         }
@@ -172,7 +171,7 @@ struct FabricEditorView: View {
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraPicker { data in
-                draft.photos.append(PhotoDraft(id: UUID(), data: data))
+                adoptPhotos([PhotoDraft(id: UUID(), data: data)])
             }
         }
         .sheet(isPresented: $showStretch) {
@@ -205,58 +204,104 @@ struct FabricEditorView: View {
 
     private var photoSection: some View {
         Section {
-            if draft.photos.isEmpty {
-                Text("The first photo becomes the swatch. You can add more and reorder them.")
+            if let photo = draft.photos.first, let image = UIImage(data: photo.data) {
+                ColorSamplerView(image: image, point: $samplePoint) { rgb in
+                    applySample(rgb)
+                }
+                Text("Tap the cloth. That spot is this fabric’s color, and this photo stays with it.")
+                    .font(.footnote)
+                    .foregroundStyle(Studio.inkSecondary)
+            } else {
+                Text("Take a picture of the fabric, then tap the cloth to set its color. Choosing a photo you already have is the other way. One photo does both jobs.")
+                    .font(.footnote)
                     .foregroundStyle(Studio.inkSecondary)
             }
-            ForEach(Array(draft.photos.enumerated()), id: \.element.id) { index, photo in
-                HStack(spacing: 12) {
-                    photoThumb(photo)
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(index == 0 ? "Swatch photo" : "Photo \(index + 1)")
-                            .foregroundStyle(Studio.ink)
-                        HStack {
-                            Button {
-                                movePhoto(photo.id, by: -1)
-                            } label: {
-                                Image(systemName: "arrow.up")
-                            }
-                            .disabled(index == 0)
-                            .accessibilityLabel("Move photo earlier")
-                            Button {
-                                movePhoto(photo.id, by: 1)
-                            } label: {
-                                Image(systemName: "arrow.down")
-                            }
-                            .disabled(index == draft.photos.count - 1)
-                            .accessibilityLabel("Move photo later")
-                            Button(role: .destructive) {
-                                draft.photos.removeAll { $0.id == photo.id }
-                            } label: {
-                                Image(systemName: "trash")
-                            }
-                            .accessibilityLabel("Delete photo")
-                        }
-                        .buttonStyle(.borderless)
-                    }
-                }
-            }
-            PhotosPicker(selection: $libraryItems, maxSelectionCount: 12, matching: .images) {
-                Label("Photo library", systemImage: "photo.on.rectangle")
-            }
+            colorSwatchRow
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 Button {
                     showCamera = true
                 } label: {
                     Label("Take a photo", systemImage: "camera")
+                        .font(.body.weight(.semibold))
                 }
             } else {
-                Text("The camera is available on a device. You can still choose photos from the library.")
+                Text("The camera is available on a device. You can still choose a photo from the library.")
                     .font(.footnote)
                     .foregroundStyle(Studio.inkSecondary)
             }
+            PhotosPicker(selection: $libraryItems, maxSelectionCount: 12, matching: .images) {
+                Label("Choose a photo", systemImage: "photo.on.rectangle")
+            }
+            if !draft.photos.isEmpty {
+                ForEach(Array(draft.photos.enumerated()), id: \.element.id) { index, photo in
+                    photoRow(photo, index: index)
+                }
+            }
+            TextField("Print or pattern", text: $draft.printPattern, prompt: Text("solid, gingham, ditsy floral"))
+                .focused($focus, equals: .printPattern)
         } header: {
-            Text("Photos")
+            Text("Photo and color")
+        }
+    }
+
+    private var colorSwatchRow: some View {
+        HStack(spacing: 12) {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(hex: draft.colorHex) ?? Studio.paper)
+                .frame(width: 44, height: 44)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(Studio.ink.opacity(0.15), lineWidth: 1)
+                )
+                .accessibilityLabel(swatchLabel)
+            TextField("Color name", text: $draft.colorName, prompt: Text("Name, if you want one"))
+                .focused($focus, equals: .colorName)
+        }
+    }
+
+    private var swatchLabel: String {
+        if draft.colorHex.isEmpty {
+            return "No color sampled yet"
+        }
+        if draft.colorName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return "Sampled color"
+        }
+        return "Sampled color, \(draft.colorName)"
+    }
+
+    private func photoRow(_ photo: PhotoDraft, index: Int) -> some View {
+        HStack(spacing: 12) {
+            photoThumb(photo)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(index == 0 ? "Color photo" : "Photo \(index + 1)")
+                    .foregroundStyle(Studio.ink)
+                HStack(spacing: 4) {
+                    Button {
+                        movePhoto(photo.id, by: -1)
+                    } label: {
+                        Image(systemName: "arrow.up")
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                    .disabled(index == 0)
+                    .accessibilityLabel("Move photo earlier")
+                    Button {
+                        movePhoto(photo.id, by: 1)
+                    } label: {
+                        Image(systemName: "arrow.down")
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                    .disabled(index == draft.photos.count - 1)
+                    .accessibilityLabel("Move photo later")
+                    Button(role: .destructive) {
+                        deletePhoto(photo.id)
+                    } label: {
+                        Image(systemName: "trash")
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                    .accessibilityLabel("Delete photo")
+                }
+                .buttonStyle(.borderless)
+            }
         }
     }
 
@@ -267,7 +312,7 @@ struct FabricEditorView: View {
                     .resizable()
                     .scaledToFill()
             } else {
-                Studio.linen
+                Studio.paper
             }
         }
         .frame(width: 64, height: 64)
@@ -356,50 +401,6 @@ struct FabricEditorView: View {
                 .foregroundStyle(Studio.inkSecondary)
         } header: {
             Text("Weight")
-        }
-    }
-
-    private var colorSection: some View {
-        Section {
-            HStack {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Color(hex: draft.colorHex) ?? Studio.linen)
-                    .frame(width: 36, height: 36)
-                    .overlay(RoundedRectangle(cornerRadius: 6).stroke(Studio.ink.opacity(0.15), lineWidth: 1))
-                    .accessibilityLabel("Color preview")
-                TextField("Color name", text: $draft.colorName)
-                    .focused($focus, equals: .colorName)
-            }
-            TextField("Hex", text: $draft.colorHex, prompt: Text("#9C4A32"))
-                .focused($focus, equals: .hex)
-                .textInputAutocapitalization(.characters)
-            TextField("Print or pattern", text: $draft.printPattern, prompt: Text("solid, gingham, ditsy floral"))
-                .focused($focus, equals: .printPattern)
-            Button("Suggest a color from the first photo", action: suggestColor)
-                .disabled(draft.photos.isEmpty)
-            if let suggestion {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("This looks like \(suggestion.name) (\(suggestion.hex)).")
-                        .foregroundStyle(Studio.ink)
-                    if suggestion.ignoredPaleBackground {
-                        Text("Near-white background was left out of the average. It is a suggestion, not a lab reading.")
-                            .font(.footnote)
-                            .foregroundStyle(Studio.inkSecondary)
-                    }
-                    Button("Use \(suggestion.name)") {
-                        draft.colorName = suggestion.name
-                        draft.colorHex = suggestion.hex
-                    }
-                    .buttonStyle(.borderless)
-                }
-            }
-            if let suggestionNote {
-                Text(suggestionNote)
-                    .font(.footnote)
-                    .foregroundStyle(Studio.inkSecondary)
-            }
-        } header: {
-            Text("Color")
         }
     }
 
@@ -496,10 +497,6 @@ struct FabricEditorView: View {
         } else if !draft.gsmText.trimmingCharacters(in: .whitespaces).isEmpty || !draft.ozText.trimmingCharacters(in: .whitespaces).isEmpty {
             return "Weight should be a number."
         }
-        let hex = draft.colorHex.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !hex.isEmpty && RGB(hex: hex) == nil {
-            return "Color should look like #9C4A32."
-        }
         if !draft.priceText.trimmingCharacters(in: .whitespaces).isEmpty && NumberParsing.decimal(from: draft.priceText) == nil {
             return "Price should be a number."
         }
@@ -546,6 +543,9 @@ struct FabricEditorView: View {
         case .edit(let id):
             if let fabric = allFabrics.first(where: { $0.id == id }) {
                 draft = FabricDraft(fabric: fabric, units: units)
+                if let rgb = RGB(hex: fabric.colorHex), ColorNaming.nearestName(to: rgb) == fabric.colorName {
+                    automaticColorName = fabric.colorName
+                }
             }
         }
     }
@@ -573,6 +573,44 @@ struct FabricEditorView: View {
         let next = index + offset
         guard draft.photos.indices.contains(next) else { return }
         draft.photos.swapAt(index, next)
+        if index == 0 || next == 0 {
+            samplePoint = nil
+        }
+    }
+
+    private func deletePhoto(_ id: UUID) {
+        let wasFirst = draft.photos.first?.id == id
+        draft.photos.removeAll { $0.id == id }
+        if wasFirst {
+            samplePoint = nil
+        }
+    }
+
+    private func adoptPhotos(_ added: [PhotoDraft]) {
+        let wasEmpty = draft.photos.isEmpty
+        draft.photos.append(contentsOf: added)
+        if wasEmpty, draft.colorHex.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, let first = draft.photos.first {
+            sampleCenter(of: first)
+        }
+    }
+
+    private func sampleCenter(of photo: PhotoDraft) {
+        guard let image = UIImage(data: photo.data) else { return }
+        let center = CGPoint(x: 0.5, y: 0.5)
+        samplePoint = center
+        if let rgb = PixelSampler.color(in: image, atNormalized: center) {
+            applySample(rgb)
+        }
+    }
+
+    private func applySample(_ rgb: RGB) {
+        draft.colorHex = rgb.hex
+        let name = ColorNaming.nearestName(to: rgb)
+        let current = draft.colorName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if current.isEmpty || current == automaticColorName {
+            draft.colorName = name
+            automaticColorName = name
+        }
     }
 
     private func importLibrary(_ items: [PhotosPickerItem]) async {
@@ -588,18 +626,7 @@ struct FabricEditorView: View {
             }
         }
         await MainActor.run {
-            draft.photos.append(contentsOf: added)
-        }
-    }
-
-    private func suggestColor() {
-        suggestion = nil
-        suggestionNote = nil
-        guard let data = draft.photos.first?.data else { return }
-        if let found = PhotoColor.suggestion(for: data) {
-            suggestion = found
-        } else {
-            suggestionNote = "That photo did not yield a color. Type a name and hex instead."
+            adoptPhotos(added)
         }
     }
 

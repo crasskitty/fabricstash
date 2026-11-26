@@ -1,3 +1,4 @@
+import UIKit
 import XCTest
 @testable import FabricStash
 
@@ -52,6 +53,29 @@ final class ColorMathTests: XCTestCase {
         XCTAssertGreaterThan(result?.r ?? 0, 0.9)
         XCTAssertTrue(DominantColor.isNearWhite(white))
         XCTAssertFalse(DominantColor.isNearWhite(RGB(hex: "#9C4A32")!))
+    }
+
+    func testTapSampleReadsTheSpotUnderTheFinger() {
+        let size = CGSize(width: 80, height: 80)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let image = UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 80, height: 40))
+            UIColor(red: 0.1, green: 0.2, blue: 0.8, alpha: 1).setFill()
+            context.fill(CGRect(x: 0, y: 40, width: 80, height: 40))
+            UIColor(red: 0.85, green: 0.15, blue: 0.2, alpha: 1).setFill()
+            context.fill(CGRect(x: 50, y: 8, width: 22, height: 22))
+        }
+        let top = PixelSampler.color(in: image, atNormalized: CGPoint(x: 0.2, y: 0.15))
+        let bottom = PixelSampler.color(in: image, atNormalized: CGPoint(x: 0.2, y: 0.8))
+        let redPatch = PixelSampler.color(in: image, atNormalized: CGPoint(x: 0.75, y: 0.2))
+        XCTAssertGreaterThan(top?.r ?? 0, 0.9)
+        XCTAssertGreaterThan(bottom?.b ?? 0, 0.7)
+        XCTAssertLessThan(bottom?.r ?? 1, 0.25)
+        XCTAssertGreaterThan(redPatch?.r ?? 0, 0.7)
+        XCTAssertLessThan(redPatch?.b ?? 1, 0.35)
     }
 
     func testHexRoundTrip() throws {
