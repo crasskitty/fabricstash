@@ -125,7 +125,7 @@ struct GalleryView: View {
                 .accessibilityAddTraits(.isHeader)
             Button("Do I have enough?", action: sheets.enough)
                 .buttonStyle(.bordered)
-                .tint(Studio.madder)
+                .tint(Studio.accent)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -143,7 +143,7 @@ struct GalleryView: View {
     private var emptyShelf: some View {
         VStack(spacing: 18) {
             Text("The shelf is empty")
-                .font(Studio.serif(.title, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(Studio.ink)
                 .multilineTextAlignment(.center)
             Text("Add a fabric you want to remember, or load a clearly fake set of samples to click around \(AppIdentity.displayName).")
@@ -151,9 +151,9 @@ struct GalleryView: View {
                 .foregroundStyle(Studio.inkSecondary)
                 .multilineTextAlignment(.center)
             Button("Add a fabric", action: onAdd)
-                .buttonStyle(MadderButtonStyle())
+                .buttonStyle(AccentButtonStyle())
             Button("Load sample fabrics", action: loadSamples)
-                .buttonStyle(GreenButtonStyle())
+                .buttonStyle(QuietButtonStyle())
             Text("Samples are invented cloth for screenshots and practice. They count toward the free \(FreeTier.fabricLimit).")
                 .font(.footnote)
                 .foregroundStyle(Studio.inkSecondary)
@@ -183,14 +183,14 @@ struct GalleryView: View {
     private var noMatches: some View {
         VStack(spacing: 14) {
             Text("Nothing matches")
-                .font(Studio.serif(.title2, weight: .semibold))
+                .font(.title2.weight(.semibold))
                 .foregroundStyle(Studio.ink)
             Text("Try another word, or clear the filters.")
                 .foregroundStyle(Studio.inkSecondary)
             Button("Clear search and filters") {
                 query = FabricQuery()
             }
-            .buttonStyle(MadderButtonStyle())
+            .buttonStyle(AccentButtonStyle())
         }
         .padding(24)
         .frame(maxWidth: 420)
@@ -243,7 +243,7 @@ private struct FabricSwatch: View {
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
             Text(fabric.name)
-                .font(Studio.serif(.headline))
+                .font(.headline)
                 .foregroundStyle(Studio.ink)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
@@ -258,11 +258,11 @@ private struct FabricSwatch: View {
                     .lineLimit(2)
             }
         }
-        .padding(10)
+        .padding(12)
         .background(Studio.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(isSelected ? Studio.madder : Studio.ink.opacity(0.08), lineWidth: isSelected ? 2 : 1)
+                .stroke(isSelected ? Studio.accent : Studio.ink.opacity(0.08), lineWidth: isSelected ? 2 : 1)
         )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityText)
@@ -279,17 +279,17 @@ private struct FabricSwatch: View {
         } else if let color = Color(hex: fabric.colorHex) {
             color
         } else {
-            Studio.sewingGreen.opacity(0.35)
+            Studio.paper
         }
     }
 
     private func badge(_ title: String) -> some View {
         Text(title)
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(Studio.onMadder)
+            .foregroundStyle(Studio.onAccent)
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
-            .background(Studio.sewingGreenFill, in: Capsule())
+            .background(Studio.accentFill, in: Capsule())
     }
 
     private var amountLine: String {

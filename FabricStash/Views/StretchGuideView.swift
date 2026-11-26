@@ -17,7 +17,7 @@ struct StretchGuideView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     Text("Step \(step + 1) of 6")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Studio.madder)
+                        .foregroundStyle(Studio.accent)
                     stepContent
                 }
                 .padding(20)
@@ -70,7 +70,7 @@ struct StretchGuideView: View {
     private var intro: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("A tape-measure test")
-                .font(Studio.serif(.title, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(Studio.ink)
             Text("\(AppIdentity.displayName) does not use the phone’s sensors to measure stretch. You mark the cloth, pull it by hand, read a tape, and type what you see.")
                 .foregroundStyle(Studio.ink)
@@ -79,7 +79,7 @@ struct StretchGuideView: View {
             Text("You will do it twice. First across the fabric (crosswise), then along it (lengthwise). After both, you can save 2-way, 4-way, or no stretch.")
                 .foregroundStyle(Studio.ink)
             Button("Start with the crosswise mark") { step = 1 }
-                .buttonStyle(MadderButtonStyle())
+                .buttonStyle(AccentButtonStyle())
         }
     }
 
@@ -113,7 +113,7 @@ struct StretchGuideView: View {
         }
         return VStack(alignment: .leading, spacing: 14) {
             Text(title)
-                .font(Studio.serif(.title, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(Studio.ink)
             Text(body)
                 .foregroundStyle(Studio.ink)
@@ -134,13 +134,13 @@ struct StretchGuideView: View {
                     .foregroundStyle(Studio.ink)
             } else {
                 Text("That is shorter than \(markPhrase). Type the length of the mark while it is stretched, not the relaxed length.")
-                    .foregroundStyle(Studio.madder)
+                    .foregroundStyle(Studio.caution)
             }
             HStack {
                 Button("Back") { step -= 1 }
                     .buttonStyle(.bordered)
                 Button("Next") { step += 1 }
-                    .buttonStyle(MadderButtonStyle())
+                    .buttonStyle(AccentButtonStyle())
                     .disabled(percent == nil)
             }
         }
@@ -149,19 +149,29 @@ struct StretchGuideView: View {
     private func recoveryStep(title: String, body: String, selection: Binding<Recovery>) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             Text(title)
-                .font(Studio.serif(.title, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(Studio.ink)
             Text(body)
                 .foregroundStyle(Studio.ink)
-            Button("Good — it sprang back") { selection.wrappedValue = .good }
-                .buttonStyle(selection.wrappedValue == .good ? MadderButtonStyle() : GreenButtonStyle())
-            Button("Poor — it stayed stretched") { selection.wrappedValue = .poor }
-                .buttonStyle(selection.wrappedValue == .poor ? MadderButtonStyle() : GreenButtonStyle())
+            if selection.wrappedValue == .good {
+                Button("Good — it sprang back") { selection.wrappedValue = .good }
+                    .buttonStyle(AccentButtonStyle())
+            } else {
+                Button("Good — it sprang back") { selection.wrappedValue = .good }
+                    .buttonStyle(QuietButtonStyle())
+            }
+            if selection.wrappedValue == .poor {
+                Button("Poor — it stayed stretched") { selection.wrappedValue = .poor }
+                    .buttonStyle(AccentButtonStyle())
+            } else {
+                Button("Poor — it stayed stretched") { selection.wrappedValue = .poor }
+                    .buttonStyle(QuietButtonStyle())
+            }
             HStack {
                 Button("Back") { step -= 1 }
                     .buttonStyle(.bordered)
                 Button("Next") { step += 1 }
-                    .buttonStyle(MadderButtonStyle())
+                    .buttonStyle(AccentButtonStyle())
                     .disabled(selection.wrappedValue == .untested)
             }
         }
@@ -182,7 +192,7 @@ struct StretchGuideView: View {
         )
         return VStack(alignment: .leading, spacing: 14) {
             Text("What to save")
-                .font(Studio.serif(.title, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(Studio.ink)
             Text(StretchAssessment.explanation(for: result.kind, crosswise: crosswise, lengthwise: lengthwise))
                 .foregroundStyle(Studio.ink)
@@ -194,7 +204,7 @@ struct StretchGuideView: View {
                 onSave(result)
                 dismiss()
             }
-            .buttonStyle(MadderButtonStyle())
+            .buttonStyle(AccentButtonStyle())
             Button("Close without saving") { dismiss() }
                 .frame(maxWidth: .infinity)
             Button("Back") { step -= 1 }

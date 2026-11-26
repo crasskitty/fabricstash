@@ -75,6 +75,51 @@ function uid(prefix) {
   return `${prefix}-${crypto.randomUUID()}`;
 }
 
+const COLOR_NAMES = [
+  ["White", "F7F5F2"], ["Ivory", "F3EDE2"], ["Cream", "F0E2C6"], ["Beige", "D9C7A6"],
+  ["Tan", "C4A574"], ["Camel", "A67C52"], ["Brown", "6B4423"], ["Chocolate", "4A2E1F"],
+  ["Black", "1A1614"], ["Charcoal", "3A3532"], ["Gray", "8A847C"], ["Silver", "C5C1B9"],
+  ["Navy", "1E2A4A"], ["Blue", "2F5D9F"], ["Light blue", "A9C6E8"], ["Teal", "2F6F6A"],
+  ["Aqua", "7EC8C3"], ["Green", "2E6B45"], ["Sage", "8AA58B"], ["Olive", "6B7032"],
+  ["Lime", "C5D46A"], ["Yellow", "E6C84A"], ["Gold", "C6A15B"], ["Orange", "E07A2F"],
+  ["Rust", "B85A2A"], ["Coral", "E38B78"], ["Red", "B4332A"], ["Madder", "9C4A32"],
+  ["Burgundy", "6E2430"], ["Pink", "E7A3B2"], ["Blush", "F0D0CB"], ["Purple", "5E3A6B"],
+  ["Lavender", "C7B4D6"], ["Maroon", "6A2E2A"],
+];
+
+function hexToRgb(hex) {
+  let cleaned = String(hex || "").trim().replace(/^#/, "");
+  if (cleaned.length === 3) cleaned = cleaned.split("").map((char) => char + char).join("");
+  if (!/^[0-9a-fA-F]{6}$/.test(cleaned)) return null;
+  return {
+    r: parseInt(cleaned.slice(0, 2), 16) / 255,
+    g: parseInt(cleaned.slice(2, 4), 16) / 255,
+    b: parseInt(cleaned.slice(4, 6), 16) / 255,
+  };
+}
+
+function nearestName(hex) {
+  const sample = hexToRgb(hex);
+  if (!sample) return "Color";
+  let best = "Color";
+  let bestDistance = Infinity;
+  for (const [name, value] of COLOR_NAMES) {
+    const swatch = hexToRgb(value);
+    if (!swatch) continue;
+    const distance = (swatch.r - sample.r) ** 2 + (swatch.g - sample.g) ** 2 + (swatch.b - sample.b) ** 2;
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = name;
+    }
+  }
+  return best;
+}
+
+function colorLine(fabric) {
+  const name = fabric.colorName || (fabric.hex ? "Sampled color" : "No color yet");
+  return `${name} · ${fabric.print || "No print noted"}`;
+}
+
 function esc(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -159,6 +204,7 @@ function render() {
   const focus = captureFocus();
   app.innerHTML = shell(body());
   restoreFocus(focus);
+  placeSampleMarks();
 }
 
 function captureFocus() {
@@ -231,8 +277,8 @@ function shelfView() {
       <section class="empty stack">
         <h2>The shelf is empty</h2>
         <p class="muted">Add a fabric you want to remember, or load a clearly fake set of samples to click around FabricStash.</p>
-        <button class="madder" type="button" data-action="add">Add a fabric</button>
-        <button class="green" type="button" data-action="load-samples">Load sample fabrics</button>
+        <button class="accent" type="button" data-action="add">Add a fabric</button>
+        <button class="quiet" type="button" data-action="load-samples">Load sample fabrics</button>
         <p class="muted">Samples are invented cloth for screenshots and practice. They count toward the free ${FREE_LIMIT}.</p>
       </section>
     `;
@@ -243,7 +289,7 @@ function shelfView() {
       <section class="empty stack">
         <h2>Nothing matches</h2>
         <p class="muted">Try another word, or clear the filters.</p>
-        <button class="madder" type="button" data-action="clear-filters">Clear search and filters</button>
+        <button class="accent" type="button" data-action="clear-filters">Clear search and filters</button>
       </section>
     `;
   }
@@ -271,11 +317,12 @@ function swatch(fabric) {
   ].filter(Boolean);
   return `
     <button class="swatch${selected}" type="button" data-action="open-fabric" data-id="${esc(fabric.id)}" aria-label="${esc(`${fabric.name}, ${amountLine(fabric)}`)}">
-      <span class="face" style="background:${esc(fabric.hex || "#3e5c4e")}">
+      <span class="face" style="${fabric.hex ? `background:${esc(fabric.hex)}` : ""}">
+        ${fabric.photo ? `<img alt="" src="${esc(fabric.photo)}">` : ""}
         <span class="badges">${badges.map((badge) => `<span class="badge">${esc(badge)}</span>`).join("")}</span>
       </span>
       <h3>${esc(fabric.name)}</h3>
-      <span class="amount"><span class="dot" style="background:${esc(fabric.hex || "#3e5c4e")}"></span>${esc(amountLine(fabric))}</span>
+      <span class="amount"><span class="dot" style="background:${esc(fabric.hex || "var(--paper)")}"></span>${esc(amountLine(fabric))}</span>
     </button>
   `;
 }
@@ -286,19 +333,21 @@ function detailView(fabric) {
   return `
     <article class="card stack">
       ${wide() ? "" : `<button type="button" data-action="back">Back</button>`}
-      <div class="face" style="background:${esc(fabric.hex || "#3e5c4e")}"></div>
+      <div class="face tall" style="${fabric.hex ? `background:${esc(fabric.hex)}` : ""}">
+        ${fabric.photo ? `<img alt="Fabric photo" src="${esc(fabric.photo)}">` : ""}
+      </div>
       <h2>${esc(fabric.name)}</h2>
       ${fabric.isSample ? `<p class="badge" style="align-self:start">Sample</p>` : ""}
       <p>${esc(onHand(fabric))}</p>
       <p class="muted">${esc(fabric.fiber)} · ${esc(typeTitle(fabric.type))} · ${esc(fabric.structure === "knit" ? "Knit" : "Woven")}</p>
-      <p class="muted">${esc(fabric.colorName)} ${esc(fabric.hex)} · ${esc(fabric.print || "solid")}</p>
+      <p class="row"><span class="chip" style="background:${esc(fabric.hex || "var(--paper)")}"></span><span>${esc(colorLine(fabric))}</span></p>
       <p class="muted">${esc(locationName(fabric.locationId))}</p>
       <p>${esc(stretchTitle(fabric.stretch))}${fabric.recovery !== "untested" ? ` · ${esc(recoveryTitle(fabric.recovery))}` : ""}</p>
       ${fabric.gsm == null ? "" : `<p class="muted">${esc(String(fabric.gsm))} GSM · ${esc(ounces)}</p>`}
       <p class="muted">${esc(fabric.care)}</p>
       <h3>Cuts</h3>
       ${uses.length === 0 ? `<p class="muted">No yardage marked used yet.</p>` : uses.map(useRow).join("")}
-      <button class="madder" type="button" data-action="open-deduct" data-id="${esc(fabric.id)}">Mark yardage used</button>
+      <button class="accent" type="button" data-action="open-deduct" data-id="${esc(fabric.id)}">Mark yardage used</button>
       <button type="button" data-action="open-stretch" data-id="${esc(fabric.id)}">Walk through a stretch test</button>
       <button type="button" data-action="open-edit" data-id="${esc(fabric.id)}">Edit fabric</button>
       <button type="button" data-action="delete-fabric" data-id="${esc(fabric.id)}">Delete fabric</button>
@@ -439,7 +488,7 @@ function locationsView() {
       <label>New place
         <input id="location-name" value="${esc(state.locationName)}" placeholder="Bin, shelf, or room">
       </label>
-      <button class="madder" type="button" data-action="add-location">Add location</button>
+      <button class="accent" type="button" data-action="add-location">Add location</button>
     </section>
   `;
 }
@@ -521,12 +570,18 @@ function editorView() {
       <label>Width (${state.system === "imperial" ? "in" : "cm"}) <input id="ed-width" name="width" value="${esc(editor.widthText)}"></label>
       <label>GSM <input id="ed-gsm" name="gsm" value="${esc(editor.gsmText)}"></label>
       ${ounces ? `<p class="muted">${esc(ounces)}. Ounces per square yard follow GSM. Stored weight stays GSM.</p>` : ""}
-      <label>Color name <input id="ed-color" name="colorName" value="${esc(editor.colorName)}"></label>
-      <label>Hex <input id="ed-hex" name="hex" value="${esc(editor.hex)}" placeholder="#B4332A"></label>
+      <p class="muted">Take a picture of the fabric, or choose one you already have. Click the cloth to set the color. That photo stays on the fabric.</p>
+      <label class="accent file">Take a photo<input id="ed-camera" type="file" accept="image/*" capture="environment"></label>
+      <label class="quiet file">Choose a photo<input id="ed-library" type="file" accept="image/*"></label>
+      ${editor.photo ? `<div class="sampler" id="sampler"><img id="ed-photo" alt="Fabric photo" src="${esc(editor.photo)}"><span class="crosshair" id="ed-cross" hidden></span><span class="loupe" id="ed-loupe" hidden></span></div>` : ""}
+      <div class="row">
+        <span class="chip" style="background:${esc(editor.hex || "var(--paper)")}" aria-label="${esc(editor.hex ? "Sampled color" : "No color sampled yet")}"></span>
+        <label class="grow">Color name <input id="ed-color" name="colorName" value="${esc(editor.colorName)}" placeholder="Name, if you want one"></label>
+      </div>
       <label>Print <input id="ed-print" name="print" value="${esc(editor.print)}"></label>
       <label>Place <select id="ed-location" name="locationId">${places}</select></label>
       ${editor.error ? `<p class="notice">${esc(editor.error)}</p>` : ""}
-      <button class="madder" type="submit">Save</button>
+      <button class="accent" type="submit">Save</button>
     </form>
   `;
 }
@@ -561,7 +616,7 @@ function deductView() {
       ${draft.projectId === "__new" ? `<label>Project name <input id="deduct-new" value="${esc(draft.newName)}"></label>` : ""}
       <label>Note <input id="deduct-note" value="${esc(draft.note)}"></label>
       ${draft.error ? `<p class="notice">${esc(draft.error)}</p>` : ""}
-      <button class="madder" type="submit" ${outcome && outcome.ok ? "" : "disabled"}>Save cut</button>
+      <button class="accent" type="submit" ${outcome && outcome.ok ? "" : "disabled"}>Save cut</button>
     </form>
   `;
 }
@@ -593,7 +648,7 @@ function stretchView() {
       ${draft.error ? `<p class="notice">${esc(draft.error)}</p>` : ""}
       <div class="row">
         ${draft.step > 0 ? `<button type="button" data-action="stretch-back">Back</button>` : ""}
-        ${draft.step < 5 ? `<button class="madder" type="button" data-action="stretch-next">Continue</button>` : `<button class="madder" type="button" data-action="stretch-save">Save stretch</button>`}
+        ${draft.step < 5 ? `<button class="accent" type="button" data-action="stretch-next">Continue</button>` : `<button class="accent" type="button" data-action="stretch-save">Save stretch</button>`}
       </div>
     </section>
   `;
@@ -643,6 +698,9 @@ function attemptAdd() {
     gsmText: "",
     colorName: "",
     hex: "",
+    photo: "",
+    sample: null,
+    autoName: "",
     print: "",
     locationId: "",
     canonicalYards: null,
@@ -667,6 +725,9 @@ function openEdit(id) {
     gsmText: fabric.gsm == null ? "" : String(fabric.gsm),
     colorName: fabric.colorName,
     hex: fabric.hex,
+    photo: fabric.photo || "",
+    sample: null,
+    autoName: fabric.colorName && fabric.colorName === nearestName(fabric.hex) ? fabric.colorName : "",
     print: fabric.print,
     locationId: fabric.locationId || "",
     canonicalYards: fabric.yardage,
@@ -687,7 +748,6 @@ function snapshotEditor() {
   state.editor.yardageText = data.yardage ?? "";
   state.editor.widthText = data.width ?? "";
   state.editor.colorName = data.colorName ?? "";
-  state.editor.hex = data.hex ?? "";
   state.editor.print = data.print ?? "";
   state.editor.locationId = data.locationId ?? "";
 }
@@ -736,7 +796,8 @@ function saveEditor(form) {
       width: inches,
       gsm,
       colorName: data.colorName.trim(),
-      hex: data.hex.trim() || "#8AA58B",
+      hex: state.editor.hex || "",
+      photo: state.editor.photo || "",
       print: data.print.trim(),
       stretchCrosswise: null,
       stretchLengthwise: null,
@@ -768,7 +829,8 @@ function saveEditor(form) {
       width: inches,
       gsm,
       colorName: data.colorName.trim(),
-      hex: data.hex.trim() || fabric.hex,
+      hex: state.editor.hex || "",
+      photo: state.editor.photo || "",
       print: data.print.trim(),
       locationId: data.locationId || null,
       updatedAt: now,
@@ -976,6 +1038,137 @@ function moveLocation(id, dir) {
   render();
 }
 
+function fittedContent(img) {
+  const rect = img.getBoundingClientRect();
+  const nw = img.naturalWidth;
+  const nh = img.naturalHeight;
+  if (!nw || !nh || !rect.width || !rect.height) return null;
+  const scale = Math.min(rect.width / nw, rect.height / nh);
+  const w = nw * scale;
+  const h = nh * scale;
+  return { x: rect.left + (rect.width - w) / 2, y: rect.top + (rect.height - h) / 2, w, h };
+}
+
+function placeSampleMarks() {
+  const img = document.getElementById("ed-photo");
+  const cross = document.getElementById("ed-cross");
+  const loupe = document.getElementById("ed-loupe");
+  const editor = state.editor;
+  if (!img || !cross || !loupe || !editor?.sample || !editor.photo) return;
+  const place = () => {
+    const fitted = fittedContent(img);
+    if (!fitted) return;
+    const stage = img.parentElement.getBoundingClientRect();
+    const x = fitted.x - stage.left + editor.sample.x * fitted.w;
+    const y = fitted.y - stage.top + editor.sample.y * fitted.h;
+    cross.hidden = false;
+    cross.style.left = `${x}px`;
+    cross.style.top = `${y}px`;
+    const loupeY = y < 72 ? y + 46 : y - 46;
+    loupe.hidden = false;
+    loupe.style.left = `${x}px`;
+    loupe.style.top = `${loupeY}px`;
+    const zoom = 3.2;
+    loupe.style.backgroundImage = `url("${editor.photo}")`;
+    loupe.style.backgroundSize = `${fitted.w * zoom}px ${fitted.h * zoom}px`;
+    loupe.style.backgroundPosition = `${28 - editor.sample.x * fitted.w * zoom}px ${28 - editor.sample.y * fitted.h * zoom}px`;
+  };
+  if (img.complete && img.naturalWidth) place();
+  else img.addEventListener("load", place, { once: true });
+}
+
+function applySample(hex, nx, ny) {
+  state.editor.hex = hex;
+  state.editor.sample = { x: nx, y: ny };
+  const name = nearestName(hex);
+  const current = state.editor.colorName.trim();
+  if (!current || current === state.editor.autoName) {
+    state.editor.colorName = name;
+    state.editor.autoName = name;
+  }
+  render();
+}
+
+function averagePatch(canvas, nx, ny) {
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  const x = Math.min(canvas.width - 1, Math.max(0, Math.round(nx * (canvas.width - 1))));
+  const y = Math.min(canvas.height - 1, Math.max(0, Math.round(ny * (canvas.height - 1))));
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+  let count = 0;
+  for (let dy = -2; dy <= 2; dy += 1) {
+    for (let dx = -2; dx <= 2; dx += 1) {
+      const px = Math.min(canvas.width - 1, Math.max(0, x + dx));
+      const py = Math.min(canvas.height - 1, Math.max(0, y + dy));
+      const pixel = context.getImageData(px, py, 1, 1).data;
+      if (pixel[3] < 128) continue;
+      red += pixel[0];
+      green += pixel[1];
+      blue += pixel[2];
+      count += 1;
+    }
+  }
+  if (!count) return "";
+  const channel = (value) => Math.round(value / count).toString(16).padStart(2, "0");
+  return `#${channel(red)}${channel(green)}${channel(blue)}`.toUpperCase();
+}
+
+function canvasForPhoto(done) {
+  const image = new Image();
+  image.onload = () => {
+    const longest = Math.max(image.naturalWidth, image.naturalHeight);
+    const scale = longest > 1200 ? 1200 / longest : 1;
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+    done(canvas);
+  };
+  image.src = state.editor.photo;
+}
+
+function readPhotoFile(file) {
+  if (!file || !state.editor) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const image = new Image();
+    image.onload = () => {
+      const longest = Math.max(image.naturalWidth, image.naturalHeight);
+      const scale = longest > 1200 ? 1200 / longest : 1;
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+      state.editor.photo = canvas.toDataURL("image/jpeg", 0.82);
+      if (!state.editor.hex) {
+        const hex = averagePatch(canvas, 0.5, 0.5);
+        if (hex) applySample(hex, 0.5, 0.5);
+        else render();
+      } else {
+        state.editor.sample = null;
+        render();
+      }
+    };
+    image.src = String(reader.result || "");
+  };
+  reader.readAsDataURL(file);
+}
+
+function samplePhotoAt(clientX, clientY) {
+  const img = document.getElementById("ed-photo");
+  if (!img || !state.editor?.photo) return;
+  const fitted = fittedContent(img);
+  if (!fitted) return;
+  if (clientX < fitted.x || clientY < fitted.y || clientX > fitted.x + fitted.w || clientY > fitted.y + fitted.h) return;
+  const nx = (clientX - fitted.x) / fitted.w;
+  const ny = (clientY - fitted.y) / fitted.h;
+  canvasForPhoto((canvas) => {
+    const hex = averagePatch(canvas, nx, ny);
+    if (hex) applySample(hex, nx, ny);
+  });
+}
+
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-action]");
   if (!target || !app.contains(target)) return;
@@ -1114,6 +1307,15 @@ document.addEventListener("change", (event) => {
   }
   if (el.id === "filter-type" || el.id === "filter-stretch" || el.id === "filter-color" || el.id === "filter-location") {
     save();
+  }
+  if ((el.id === "ed-camera" || el.id === "ed-library") && el.files && el.files[0]) {
+    readPhotoFile(el.files[0]);
+  }
+});
+
+document.addEventListener("pointerdown", (event) => {
+  if (event.target && event.target.id === "ed-photo") {
+    samplePhotoAt(event.clientX, event.clientY);
   }
 });
 

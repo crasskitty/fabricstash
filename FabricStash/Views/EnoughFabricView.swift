@@ -44,7 +44,7 @@ struct EnoughFabricView: View {
             } else if need == nil {
                 Section {
                     Text("Use numbers greater than zero for both length and width.")
-                        .foregroundStyle(Studio.madder)
+                        .foregroundStyle(Studio.caution)
                 }
             } else {
                 Section {

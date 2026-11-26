@@ -9,7 +9,7 @@ struct PaywallView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     Text("The free shelf holds \(FreeTier.fabricLimit)")
-                        .font(Studio.serif(.largeTitle, weight: .semibold))
+                        .font(.largeTitle.weight(.semibold))
                         .foregroundStyle(Studio.ink)
                     Text("Unlock \(AppIdentity.displayName) once to keep every bolt, scrap, and remnant on this device. Fabrics you already have can still be edited, photographed, and cut while the shelf is full.")
                         .foregroundStyle(Studio.ink)
@@ -17,13 +17,13 @@ struct PaywallView: View {
                         .foregroundStyle(Studio.ink)
                     if let product = purchases.product {
                         Text(product.displayPrice)
-                            .font(Studio.serif(.title, weight: .semibold))
-                            .foregroundStyle(Studio.madder)
+                            .font(.title.weight(.semibold))
+                            .foregroundStyle(Studio.accent)
                             .accessibilityLabel("Price \(product.displayPrice)")
                         Button(purchases.isBusy ? "Working…" : "Unlock for \(product.displayPrice)") {
                             Task { await purchases.purchase() }
                         }
-                        .buttonStyle(MadderButtonStyle())
+                        .buttonStyle(AccentButtonStyle())
                         .disabled(purchases.isBusy)
                     } else {
                         Text("The App Store price appears here when the unlock product loads.")
@@ -31,12 +31,12 @@ struct PaywallView: View {
                         Button("Try loading it again") {
                             Task { await purchases.loadProduct() }
                         }
-                        .buttonStyle(MadderButtonStyle())
+                        .buttonStyle(AccentButtonStyle())
                     }
                     Button(purchases.isBusy ? "Working…" : "Restore purchases") {
                         Task { await purchases.restore() }
                     }
-                    .buttonStyle(GreenButtonStyle())
+                    .buttonStyle(QuietButtonStyle())
                     .disabled(purchases.isBusy)
                     if let message = purchases.lastMessage {
                         Text(message)
@@ -45,9 +45,9 @@ struct PaywallView: View {
                     }
                     if purchases.isUnlocked {
                         Text("This Apple ID already has the unlock.")
-                            .foregroundStyle(Studio.sewingGreen)
+                            .foregroundStyle(Studio.accent)
                         Button("Continue") { dismiss() }
-                            .buttonStyle(MadderButtonStyle())
+                            .buttonStyle(AccentButtonStyle())
                     }
                     Button("Not now") { dismiss() }
                         .frame(maxWidth: .infinity)

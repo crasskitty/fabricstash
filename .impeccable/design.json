@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-26T22:42:26Z",
+  "title": "Design System: FabricStash",
+  "extensions": {
+    "colorMeta": {
+      "sea-glass": {
+        "role": "primary",
+        "displayName": "Sea glass",
+        "canonical": "#215E70",
+        "tonalRamp": [
+          "#000F1F",
+          "#002B3C",
+          "#044A5B",
+          "#2E6A7C",
+          "#518C9F",
+          "#74AFC3",
+          "#98D4E8",
+          "#BCFAFF"
+        ]
+      },
+      "sea-glass-fill-dark": {
+        "role": "primary",
+        "displayName": "Sea glass fill, dark",
+        "canonical": "#2C6E82",
+        "tonalRamp": [
+          "#000F20",
+          "#002C3E",
+          "#004A5D",
+          "#286B7E",
+          "#4C8DA1",
+          "#6FB0C5",
+          "#93D5EB",
+          "#B8FBFF"
+        ]
+      },
+      "sea-glass-tint-dark": {
+        "role": "primary",
+        "displayName": "Sea glass tint, dark",
+        "canonical": "#9ED0DC",
+        "tonalRamp": [
+          "#001019",
+          "#002B35",
+          "#184954",
+          "#3A6974",
+          "#5B8B96",
+          "#7DAEBA",
+          "#A1D3DF",
+          "#C6F9FF"
+        ]
+      },
+      "on-accent": {
+        "role": "neutral",
+        "displayName": "On accent",
+        "canonical": "#F7FBFC",
+        "tonalRamp": [
+          "#090C0C",
+          "#232626",
+          "#3F4343",
+          "#5E6263",
+          "#7F8384",
+          "#A2A6A7",
+          "#C6CACB",
+          "#EBEFF0"
+        ]
+      },
+      "cool-paper": {
+        "role": "neutral",
+        "displayName": "Cool paper",
+        "canonical": "#E6EEF0",
+        "tonalRamp": [
+          "#070C0D",
+          "#202628",
+          "#3D4345",
+          "#5C6364",
+          "#7D8486",
+          "#9FA7A8",
+          "#C3CBCD",
+          "#E8F0F2"
+        ]
+      },
+      "cool-paper-dark": {
+        "role": "neutral",
+        "displayName": "Cool paper, dark",
+        "canonical": "#152024",
+        "tonalRamp": [
+          "#040D10",
+          "#1C272B",
+          "#384449",
+          "#576468",
+          "#78858A",
+          "#9AA8AD",
+          "#BECCD1",
+          "#E3F1F7"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card",
+        "canonical": "#F7FBFC",
+        "tonalRamp": [
+          "#090C0C",
+          "#232626",
+          "#3F4343",
+          "#5E6263",
+          "#7F8384",
+          "#A2A6A7",
+          "#C6CACB",
+          "#EBEFF0"
+        ]
+      },
+      "card-dark": {
+        "role": "neutral",
+        "displayName": "Card, dark",
+        "canonical": "#1C262B",
+        "tonalRamp": [
+          "#050D11",
+          "#1D272C",
+          "#394449",
+          "#586369",
+          "#79848B",
+          "#9BA7AE",
+          "#BFCBD2",
+          "#E4F1F8"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#1E2C31",
+        "tonalRamp": [
+          "#020D11",
+          "#1A272C",
+          "#36454A",
+          "#55646A",
+          "#75858B",
+          "#97A8AF",
+          "#BBCDD3",
+          "#E0F2F9"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Ink, dark",
+        "canonical": "#E7F1F3",
+        "tonalRamp": [
+          "#060C0E",
+          "#1F2728",
+          "#3C4445",
+          "#5A6365",
+          "#7B8486",
+          "#9EA7A9",
+          "#C1CBCD",
+          "#E7F1F3"
+        ]
+      },
+      "ink-secondary": {
+        "role": "neutral",
+        "displayName": "Secondary ink",
+        "canonical": "#4E6068",
+        "tonalRamp": [
+          "#010D13",
+          "#17282F",
+          "#34454D",
+          "#52646D",
+          "#73868E",
+          "#95A9B2",
+          "#B9CDD6",
+          "#DEF2FC"
+        ]
+      },
+      "ink-secondary-dark": {
+        "role": "neutral",
+        "displayName": "Secondary ink, dark",
+        "canonical": "#A8BCC3",
+        "tonalRamp": [
+          "#010D12",
+          "#17282D",
+          "#34454B",
+          "#53656B",
+          "#73868D",
+          "#95A9B0",
+          "#B9CDD4",
+          "#DEF3FA"
+        ]
+      },
+      "caution": {
+        "role": "caution",
+        "displayName": "Caution",
+        "canonical": "#8B3A48",
+        "tonalRamp": [
+          "#2A0002",
+          "#4D0016",
+          "#702232",
+          "#954350",
+          "#BB6471",
+          "#E18793",
+          "#FFABB6",
+          "#FFD0DB"
+        ]
+      },
+      "caution-dark": {
+        "role": "caution",
+        "displayName": "Caution, dark",
+        "canonical": "#F3C1C8",
+        "tonalRamp": [
+          "#1D0006",
+          "#3C181F",
+          "#5C353B",
+          "#7E535A",
+          "#A2747B",
+          "#C6969D",
+          "#ECBAC1",
+          "#FFDFE6"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "An empty shelf, a fabric name on its page, the unlock headline."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "A stretch-test step, the unlock price."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The name under a shelf card."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Facts, fields, and buttons."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Captions under a fact."
+      }
+    },
+    "shadows": [
+      {
+        "name": "loupe",
+        "value": "0 2px 8px rgba(0, 0, 0, 0.18)",
+        "purpose": "The magnified spot on the color sampler. Fabric cards stay flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "press",
+        "value": "opacity 0.86",
+        "purpose": "Primary button while pressed. There is no custom easing curve."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "three-columns",
+        "value": "640px"
+      },
+      {
+        "name": "four-columns",
+        "value": "900px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one accent action: add a fabric, save, or mark yardage used.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Add a fabric</button>",
+      "css": ".ds-btn-primary { display: inline-flex; justify-content: center; align-items: center; width: 100%; background: #215E70; color: #F7FBFC; border: 0; border-radius: 14px; padding: 14px 18px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; font-size: 17px; font-weight: 600; cursor: pointer; }\n.ds-btn-primary:hover { opacity: 0.86; }\n.ds-btn-primary:focus-visible { outline: 2px solid #215E70; outline-offset: 3px; }\n.ds-btn-primary:active { opacity: 0.86; }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "The second action, such as choosing a photo or loading samples.",
+      "html": "<button class=\"ds-btn-quiet\" type=\"button\">Choose a photo</button>",
+      "css": ".ds-btn-quiet { display: inline-flex; justify-content: center; align-items: center; width: 100%; background: #F7FBFC; color: #1E2C31; border: 1px solid rgba(30, 44, 49, 0.12); border-radius: 14px; padding: 14px 18px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; font-size: 17px; font-weight: 600; cursor: pointer; }\n.ds-btn-quiet:hover { color: rgba(30, 44, 49, 0.7); }\n.ds-btn-quiet:focus-visible { outline: 2px solid #215E70; outline-offset: 3px; }\n.ds-btn-quiet:active { color: rgba(30, 44, 49, 0.7); }"
+    },
+    {
+      "name": "Shelf Card",
+      "kind": "card",
+      "refersTo": "card-shelf",
+      "description": "One fabric on the shelf: the photo, the name, then the amount with its color dot.",
+      "html": "<article class=\"ds-card\">\n  <div class=\"ds-card-photo\" style=\"background:#8AA58B\"></div>\n  <h3 class=\"ds-card-name\">Sample gingham</h3>\n  <p class=\"ds-card-amount\"><span class=\"ds-card-dot\" style=\"background:#8AA58B\"></span>2.5 yd</p>\n</article>",
+      "css": ".ds-card { width: 220px; padding: 12px; background: #F7FBFC; color: #1E2C31; border: 1px solid rgba(30, 44, 49, 0.08); border-radius: 16px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; }\n.ds-card-photo { height: 132px; border-radius: 12px; }\n.ds-card-name { margin: 8px 0 4px; font-size: 17px; font-weight: 600; line-height: 1.3; }\n.ds-card-amount { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 15px; }\n.ds-card-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(30, 44, 49, 0.12); }\n.ds-card:hover { border-color: #215E70; }\n.ds-card:focus-visible { outline: 2px solid #215E70; outline-offset: 3px; }"
+    },
+    {
+      "name": "Color Name Field",
+      "kind": "input",
+      "refersTo": "swatch-chip",
+      "description": "The sampled swatch beside an optional name. There is no hex field.",
+      "html": "<label class=\"ds-field\">\n  <span class=\"ds-swatch\" style=\"background:#2F6F6A\"></span>\n  <span class=\"ds-field-copy\">Color name\n    <input class=\"ds-input\" type=\"text\" value=\"Teal\" placeholder=\"Name, if you want one\">\n  </span>\n</label>",
+      "css": ".ds-field { display: flex; align-items: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; color: #4E6068; font-size: 15px; }\n.ds-swatch { width: 44px; height: 44px; border-radius: 8px; border: 1px solid rgba(30, 44, 49, 0.12); flex: none; }\n.ds-field-copy { display: grid; gap: 4px; flex: 1; }\n.ds-input { font: inherit; font-size: 17px; color: #1E2C31; background: #F7FBFC; border: 1px solid rgba(30, 44, 49, 0.12); border-radius: 12px; padding: 10px 12px; }\n.ds-input:hover { border-color: rgba(30, 44, 49, 0.28); }\n.ds-input:focus-visible { outline: 2px solid #215E70; outline-offset: 2px; border-color: #215E70; }"
+    },
+    {
+      "name": "Shelf Navigation",
+      "kind": "nav",
+      "description": "Large title on cool paper, with the add action in sea glass.",
+      "html": "<header class=\"ds-nav\">\n  <h1 class=\"ds-nav-title\">FabricStash</h1>\n  <button class=\"ds-nav-add\" type=\"button\" aria-label=\"Add fabric\">+</button>\n</header>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 8px; background: #E6EEF0; color: #1E2C31; padding: 8px 0; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; }\n.ds-nav-title { margin: 0; flex: 1; font-size: 34px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }\n.ds-nav-add { width: 44px; height: 44px; border-radius: 14px; border: 0; background: transparent; color: #215E70; font-size: 28px; line-height: 1; cursor: pointer; }\n.ds-nav-add:hover { background: rgba(33, 94, 112, 0.1); }\n.ds-nav-add:focus-visible { outline: 2px solid #215E70; outline-offset: 2px; }"
+    },
+    {
+      "name": "Sample Badge",
+      "kind": "chip",
+      "description": "A capsule on the cloth photo for sample, scrap, or used up.",
+      "html": "<span class=\"ds-badge\">Sample</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; background: #215E70; color: #F7FBFC; border-radius: 999px; padding: 3px 7px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; font-size: 12px; font-weight: 600; }\n.ds-badge:hover { opacity: 0.86; }\n.ds-badge:focus-visible { outline: 2px solid #215E70; outline-offset: 2px; }"
+    },
+    {
+      "name": "Color Sampler",
+      "kind": "custom",
+      "description": "The cloth photo is the color field. A ring and a loupe sit on the tapped spot.",
+      "html": "<div class=\"ds-sampler\" style=\"background:#C6A15B\">\n  <span class=\"ds-ring\"></span>\n  <span class=\"ds-loupe\"></span>\n</div>",
+      "css": ".ds-sampler { position: relative; height: 180px; border-radius: 16px; border: 1px solid rgba(30, 44, 49, 0.08); overflow: hidden; }\n.ds-ring { position: absolute; left: 58%; top: 46%; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45); }\n.ds-ring::before, .ds-ring::after { content: \"\"; position: absolute; background: #fff; }\n.ds-ring::before { left: 12px; top: 6px; width: 1px; height: 12px; }\n.ds-ring::after { left: 6px; top: 12px; width: 12px; height: 1px; }\n.ds-loupe { position: absolute; left: 58%; top: calc(46% - 46px); width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; border: 2px solid #fff; background: #C6A15B; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); }\n.ds-sampler:hover .ds-ring { border-color: #F7FBFC; }\n.ds-sampler:focus-visible { outline: 2px solid #215E70; outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A coastal morning shelf",
+    "overview": "FabricStash is a shelf you can scan in north light. The ground is cool paper, the type is soft blue-charcoal, and one sea-glass accent marks the action and the selected card. The cloth photos carry the color. The chrome stays quiet.\n\nThe brown, kraft, camel, and dark-wood studio is gone, including its serif titles and madder buttons. San Francisco (the system face) carries every label so the shelf follows the reading size the owner already set. Depth comes from a card lifted one step off the paper, not from a shadow.",
+    "keyCharacteristics": [
+      "Cool paper ground, soft ink, one accent",
+      "The photograph is the color field of a card",
+      "A ring and a loupe mark the spot tapped on the cloth",
+      "Aligned cards, the name and the amount in the same place, spacing on a 12-point measure",
+      "Native iOS controls on iPhone and iPad, with the same palette in the browser preview"
+    ],
+    "rules": [
+      {
+        "name": "The Cloth Carries the Color Rule",
+        "body": "Sea glass never tints a fabric photo or stands in for a fabric that has its own swatch. A missing photo with a sampled color shows that color. A missing color shows paper.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Accent Rule",
+        "body": "Sea glass is for the action and the selection. Caution is only for a problem. Nothing else gets a brand hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The System Face Rule",
+        "body": "Labels, buttons, and titles use the platform face. A second face is not part of this shelf.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Shelf Rule",
+        "body": "Do not add a drop shadow to a fabric card. The photo is the depth.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the ground on cool paper and the action on sea glass.",
+      "Do let the fabric photo be the color of the card.",
+      "Do keep names, amounts, and spacing aligned from card to card.",
+      "Do use caution only when something the owner typed cannot be saved or a cut would pass zero."
+    ],
+    "donts": [
+      "Don't use brown, kraft, camel, mud, dark wood, or a terracotta accent.",
+      "Don't ask the owner to type or edit a hex code.",
+      "Don't make a second photo the price of knowing the color when one photo is already on the fabric.",
+      "Don't set fabric titles in a serif."
+    ]
+  }
+}
