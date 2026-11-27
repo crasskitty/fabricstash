@@ -12,7 +12,7 @@ A person who sews, at home, keeping track of cloth they already own. They open t
 
 ## Product Purpose
 
-Bolt & Bobbin is a private catalog of fabric on one iPhone or iPad. Success is a shelf the owner can scan, with photos, fiber, stretch, yardage, and a place for each piece, plus a check for whether they have enough and a record of what a project used.
+My Fabric Cuts is a private catalog of fabric on one iPhone or iPad. Success is a shelf the owner can scan, with photos, fiber, stretch, yardage, and a place for each piece, plus a check for whether they have enough and a record of what a project used.
 
 ## Positioning
 
@@ -33,7 +33,7 @@ The owner stands at a shelf, bin, or cutting table with the cloth in hand. They 
 
 ## Brand Commitments
 
-The name is Bolt & Bobbin. The owner rejected Stash and FabricStash as the public name, and rejected the brown, kraft, camel, mud, and dark-wood look. The replacement is pretty, soothing, and organized: a calm paper ground, soft ink, and one gentle accent for actions and selection. Cloth photos carry the color. The chrome stays quiet. These constraints are pinned by the owner.
+The name is My Fabric Cuts. The owner rejected Stash and FabricStash as the public name, and rejected the brown, kraft, camel, mud, and dark-wood look. The replacement is pretty, soothing, and organized: a calm paper ground, soft ink, and one gentle accent for actions and selection. Cloth photos carry the color. The chrome stays quiet. These constraints are pinned by the owner.
 
 ## Evidence on Hand
 
