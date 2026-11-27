@@ -1,4 +1,4 @@
-# Screenshot plan — FabricStash
+# Screenshot plan — Bolt & Bobbin
 
 Capture these on a **6.7-inch iPhone** simulator or device and on a **13-inch iPad** simulator or device. Use the same order and the same sample stash on both.
 

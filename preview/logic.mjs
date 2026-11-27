@@ -13,7 +13,7 @@ export const STRETCH_MARK_CM = 10;
 export const MEANINGFUL_STRETCH = 15;
 
 const SAMPLE_NOTE =
-  "Fictional cloth for trying FabricStash. It is not from your shelf. Delete it anytime.";
+  "Fictional cloth for trying Bolt & Bobbin. It is not from your shelf. Delete it anytime.";
 
 export function canAddFabric(currentCount, isUnlocked) {
   if (isUnlocked) return true;
