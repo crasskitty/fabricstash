@@ -1,6 +1,6 @@
-# Submitting FabricStash
+# Submitting My Fabric Cuts
 
-Ashley publishes this herself, on her Mac, with her active Apple Developer membership and Xcode. The public name is **FabricStash**. Do these in order.
+Ashley publishes this herself, on her Mac, with her active Apple Developer membership and Xcode. The public name is **My Fabric Cuts**. App Store Connect already uses that name (Apple ID 6839844744). Do these in order.
 
 The listing text is in `APP_STORE_LISTING.md`. The screenshots are in `SCREENSHOT_PLAN.md`. The policy she must host is in `PRIVACY_POLICY.md`. The name check is in `NAME_CANDIDATES.md`.
 
@@ -10,34 +10,34 @@ Identifiers she must make match, in Xcode, in App Store Connect, and in the Stor
 
 | Item | Value |
 | --- | --- |
-| App Store name and home-screen name | FabricStash |
+| App Store name and home-screen name | My Fabric Cuts |
 | Bundle id | `com.ashleyneale.fabricstash` |
 | Unlock product id | `com.ashleyneale.fabricstash.unlock` |
 | Unlock type | Non-consumable, one time |
 | Free cap | 25 fabrics |
 
-If the project still says Stash, or the bundle id is still `com.ashleyneale.stash`, change it before she creates the App Store record. A bundle id and a product id cannot be quietly swapped after Apple has accepted them.
+The home-screen name and the App Store name are My Fabric Cuts. The Xcode target, scheme, and Swift module stay FabricStash. If a bundle id is still `com.ashleyneale.stash`, that rejected id must not be used. A bundle id and a product id cannot be quietly swapped after Apple has accepted them.
 
 ## 1. Open the project and set the team
 
 1. Open the Xcode project (or the workspace, if the project has one) on her Mac.
 2. Select the app target. Under **Signing & Capabilities**, set **Team** to her Apple Developer team. Leave **Automatically manage signing** on.
-3. On the **General** tab, set **Display Name** to `FabricStash`, **Bundle Identifier** to `com.ashleyneale.fabricstash`, **Version** to `1.0`, and **Build** to `1`.
+3. On the **General** tab, set **Display Name** to `My Fabric Cuts`, **Bundle Identifier** to `com.ashleyneale.fabricstash`, **Version** to `1.0`, and **Build** to `1`. The bundle name (`CFBundleName`) is My Fabric Cuts as well. Do not rename the target.
 4. Confirm the target’s In-App Purchase capability is on. Do not add iCloud for version 1.
 5. Search the project for `com.ashleyneale.stash` and for the product id. The purchase code must use `com.ashleyneale.fabricstash.unlock` and nothing else.
 6. Let Xcode register the App ID, or register it herself at [developer.apple.com](https://developer.apple.com) → Identifiers → App IDs, explicit, `com.ashleyneale.fabricstash`. A successful signed build is the check that the team and the bundle id agree.
 
-## 2. Create the App Store Connect record
+## 2. Open the App Store Connect record
 
 Paid apps need a contract even when the download is free, because the unlock is a purchase.
 
 1. In App Store Connect, open **Business** → **Agreements, Tax, and Banking**. Accept the Paid Applications agreement and finish banking and tax. Until that agreement is active, the unlock cannot be submitted for sale.
-2. **Apps** → **New App**.
+2. Open the existing app **My Fabric Cuts**, Apple ID 6839844744. Do not create a second app.
    - Platforms: iOS
-   - Name: `FabricStash`
+   - Name: `My Fabric Cuts`
    - Primary language: English (U.S.)
-   - Bundle ID: `com.ashleyneale.fabricstash` (it appears in the menu only after the App ID exists)
-   - SKU: `fabricstash-ios` (any SKU she has not used; she cannot change it later)
+   - Bundle ID: `com.ashleyneale.fabricstash`
+   - SKU: `fabricstash-ios` (already set; a SKU cannot change, and it is not the public name)
    - User access: Full Access
 3. Create version **1.0**. Paste the name, subtitle, promotional text, description, keywords, what’s new, category, age-rating answers, copyright line, and URLs from `APP_STORE_LISTING.md`.
 4. The support URL, marketing URL, and privacy policy URL are still TODOs. Host them first. Fill in the contact email in `PRIVACY_POLICY.md` before that page goes public.
@@ -46,7 +46,7 @@ Paid apps need a contract even when the download is free, because the unlock is 
 
 1. In the app record, open **In-App Purchases** (or **Subscriptions** → **Non-Consumable**, depending on the current Connect sidebar) and create a purchase.
 2. Type: **Non-Consumable**.
-3. Reference name: `FabricStash Unlock`. This name is only for her in Connect.
+3. Reference name: `My Fabric Cuts Unlock`. This name is only for her in Connect. If the product already exists, leave the product id and update the reference name.
 4. Product ID: `com.ashleyneale.fabricstash.unlock`. Copy it. Apple will not let her edit it later, and it will not match the app if a single character differs.
 5. Price is her decision. A reasonable starting point is **$6.99 USD**. Pick that price point, or another one, in Connect. She can change the price later without a new binary. $6.99 is a suggestion, not a requirement of this kit.
 6. Add an English (U.S.) localization. Display name: `Full catalog`. Description: `One-time unlock for more than 25 fabrics.`
@@ -94,7 +94,7 @@ Sandbox, on a device, after the product exists in Connect:
 This environment had no iOS SDK, so none of the following was run here. On her Mac, before she submits:
 
 - The project builds and launches.
-- Display name is FabricStash, bundle id is `com.ashleyneale.fabricstash`, and a search of the project finds no leftover `com.ashleyneale.stash`.
+- Display name is My Fabric Cuts, bundle id is `com.ashleyneale.fabricstash`, and a search of the project finds no leftover `com.ashleyneale.stash`.
 - The purchase product id in code is `com.ashleyneale.fabricstash.unlock`.
 - The camera permission prompt appears, and the purpose string says why a sewing catalog wants the camera.
 - The photo picker opens and a chosen photo stays on the fabric.

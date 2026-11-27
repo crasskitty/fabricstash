@@ -273,7 +273,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = FabricStash/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = FabricStash;
+				INFOPLIST_KEY_CFBundleDisplayName = "My Fabric Cuts";
+				INFOPLIST_KEY_CFBundleName = "My Fabric Cuts";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -304,7 +305,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = FabricStash/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = FabricStash;
+				INFOPLIST_KEY_CFBundleDisplayName = "My Fabric Cuts";
+				INFOPLIST_KEY_CFBundleName = "My Fabric Cuts";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

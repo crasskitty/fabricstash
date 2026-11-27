@@ -1,8 +1,8 @@
-# Privacy policy — FabricStash
+# Privacy policy — My Fabric Cuts
 
 **Draft date: 21 November 2026**
 
-This is a draft for Ashley Neale to read, finish, and host. The contact email and the public URL are still open. Do not submit FabricStash until both are real.
+This is a draft for Ashley Neale to read, finish, and host. The contact email and the public URL are still open. Do not submit My Fabric Cuts until both are real.
 
 **TODO — Ashley’s contact email:** `[email not set yet]`
 
@@ -10,15 +10,15 @@ This is a draft for Ashley Neale to read, finish, and host. The contact email an
 
 ## Who is responsible
 
-FabricStash is published by Ashley Neale. She is the person to contact about this policy, at the email above, once she has filled it in.
+My Fabric Cuts is published by Ashley Neale. She is the person to contact about this policy, at the email above, once she has filled it in.
 
 ## What the app does
 
-FabricStash is a catalog of sewing fabric. You keep photos, fiber, stretch, yardage in yards or meters, locations, and project notes for cloth you own. You can ask whether a piece is long enough for a project, deduct the length a project uses, and export a CSV.
+My Fabric Cuts is a catalog of sewing fabric. You keep photos, fiber, stretch, yardage in yards or meters, locations, and project notes for cloth you own. You can ask whether a piece is long enough for a project, deduct the length a project uses, and export a CSV.
 
 ## Where the catalog lives
 
-Version 1 stores the catalog on the iPhone or iPad where you entered it. Photos you take or choose stay on that device as part of the catalog. FabricStash does not upload the catalog, the photos, or a copy of the CSV to Ashley.
+Version 1 stores the catalog on the iPhone or iPad where you entered it. Photos you take or choose stay on that device as part of the catalog. My Fabric Cuts does not upload the catalog, the photos, or a copy of the CSV to Ashley.
 
 There is no account. Version 1 does not sync the catalog through iCloud. Removing the app removes the catalog from that device. A device backup you make yourself, and the CSV you export, are the copies you control.
 
@@ -34,11 +34,11 @@ Restore Purchase asks Apple, with your Apple Account, whether this unlock was al
 
 ## CSV export
 
-When you export a CSV, the share sheet is the system share sheet. Whatever you send, and whoever you send it to, is your action. FabricStash does not take a copy of that export.
+When you export a CSV, the share sheet is the system share sheet. Whatever you send, and whoever you send it to, is your action. My Fabric Cuts does not take a copy of that export.
 
 ## Children
 
-FabricStash is a sewing catalog for a general audience. It is not directed at children under 13, and it does not ask anyone for an account or a profile.
+My Fabric Cuts is a sewing catalog for a general audience. It is not directed at children under 13, and it does not ask anyone for an account or a profile.
 
 ## Changes
 

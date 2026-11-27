@@ -230,7 +230,7 @@ function shell(content) {
         <button class="icon-button" type="button" data-action="toggle-menu" aria-expanded="${state.menuOpen}" aria-label="More">More</button>
         ${state.menuOpen ? menuPanel() : ""}
       </div>
-      <h1>FabricStash</h1>
+      <h1>My Fabric Cuts</h1>
       <button class="icon-button" type="button" data-action="open-filters" aria-label="Filter fabrics">${filtering() ? "Filter on" : "Filter"}</button>
       <button class="icon-button" type="button" data-action="add" aria-label="Add fabric">Add</button>
     </div>
@@ -276,7 +276,7 @@ function shelfView() {
     return `
       <section class="empty stack">
         <h2>The shelf is empty</h2>
-        <p class="muted">Add a fabric you want to remember, or load a clearly fake set of samples to click around FabricStash.</p>
+        <p class="muted">Add a fabric you want to remember, or load a clearly fake set of samples to click around My Fabric Cuts.</p>
         <button class="accent" type="button" data-action="add">Add a fabric</button>
         <button class="quiet" type="button" data-action="load-samples">Load sample fabrics</button>
         <p class="muted">Samples are invented cloth for screenshots and practice. They count toward the free ${FREE_LIMIT}.</p>
@@ -383,7 +383,7 @@ function enoughView() {
   const need = yards > 0 && inches > 0 ? { yards, widthInches: inches } : null;
   let result = "";
   if (!state.enoughLength && !state.enoughWidth) {
-    result = `<p class="muted">Enter a length and a width. FabricStash will list cloth that covers it, and cloth that is close but short.</p>`;
+    result = `<p class="muted">Enter a length and a width. My Fabric Cuts will list cloth that covers it, and cloth that is close but short.</p>`;
   } else if (!need) {
     result = `<p class="notice">Use numbers greater than zero for both length and width.</p>`;
   } else {
@@ -629,7 +629,7 @@ function stretchView() {
   const marked = state.system === "imperial" ? 4 : 10;
   const steps = [
     `<h2>A tape-measure test</h2>
-     <p>FabricStash does not use the phone’s sensors to measure stretch. You mark the cloth, pull it by hand, read a tape, and type what you see.</p>
+     <p>My Fabric Cuts does not use the phone’s sensors to measure stretch. You mark the cloth, pull it by hand, read a tape, and type what you see.</p>
      <p>${state.system === "imperial" ? "Four inches is the mark because the math is easy: if 4 inches becomes 5 inches, that is 25% stretch." : "Ten centimeters is the mark because the math is easy: if 10 cm becomes 13 cm, that is 30% stretch."}</p>
      <p>You will do it twice. First across the fabric (crosswise), then along it (lengthwise). After both, you can save 2-way, 4-way, or no stretch.</p>`,
     `<h2>Crosswise</h2><p>Mark ${mark} from selvedge toward selvedge, across the cloth. Hold one end of the mark and pull the other until the fabric resists and you would not want to pull harder. Measure the mark again and type that length.</p>
@@ -952,7 +952,7 @@ function exportCsv() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "FabricStash.csv";
+  link.download = "My Fabric Cuts.csv";
   link.click();
   URL.revokeObjectURL(url);
 }

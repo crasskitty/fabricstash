@@ -1,5 +1,5 @@
 ---
-name: FabricStash
+name: "My Fabric Cuts"
 description: A quiet shelf of cloth, on cool paper, with one sea-glass accent.
 colors:
   sea-glass: "#215E70"
@@ -74,13 +74,13 @@ components:
     size: "44px"
 ---
 
-# Design System: FabricStash
+# Design System: My Fabric Cuts
 
 ## Overview
 
 **Creative North Star: "A coastal morning shelf"**
 
-FabricStash is a shelf you can scan in north light. The ground is cool paper, the type is soft blue-charcoal, and one sea-glass accent marks the action and the selected card. The cloth photos carry the color. The chrome stays quiet.
+My Fabric Cuts is a shelf you can scan in north light. The ground is cool paper, the type is soft blue-charcoal, and one sea-glass accent marks the action and the selected card. The cloth photos carry the color. The chrome stays quiet.
 
 The brown, kraft, camel, and dark-wood studio is gone, including its serif titles and madder buttons. San Francisco (the system face) carries every label so the shelf follows the reading size the owner already set. Depth comes from a card lifted one step off the paper, not from a shadow.
 

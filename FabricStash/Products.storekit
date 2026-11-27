@@ -10,7 +10,7 @@
       "internalID" : "FABRICSTASH_UNLOCK",
       "localizations" : [
         {
-          "description" : "Keep more than 25 fabrics in FabricStash on this device.",
+          "description" : "Keep more than 25 fabrics in My Fabric Cuts on this device.",
           "displayName" : "Unlimited fabrics",
           "locale" : "en_US"
         }

@@ -1,10 +1,8 @@
 # Public name candidates
 
-Ashley rejected **Stash**. The public name in this kit is **FabricStash**.
+Ashley rejected **Stash**, **FabricStash**, and **FabricStash Cloth**. The public name is **My Fabric Cuts**. Apple accepted that App Store title on 27 November 2026 for Apple ID 6839844744, locale en-US.
 
-Use that name on the App Store, on the home screen, and in the listing, privacy policy, and review notes. The bundle id is `com.ashleyneale.fabricstash`. The unlock product id is `com.ashleyneale.fabricstash.unlock`.
-
-If the Xcode project still shows the old working title Stash, or the bundle id `com.ashleyneale.stash`, change it to FabricStash and `com.ashleyneale.fabricstash` before creating the App Store Connect record. These files do not change the Xcode project.
+Use My Fabric Cuts on the App Store, on the home screen, and in the listing, privacy policy, and review notes. The bundle id stays `com.ashleyneale.fabricstash`. The unlock product id stays `com.ashleyneale.fabricstash.unlock`. The Xcode target, scheme, and Swift module stay FabricStash. Those identifiers are not the name on the home screen.
 
 This is an App Store title check, not a trademark search. A name can still be registered as a mark, and Apple can still refuse a name it finds confusingly similar.
 
@@ -12,13 +10,17 @@ Searches were run on 21 November 2026 against the iTunes Search API (`entity=sof
 
 ## Recommendation
 
-**Primary: FabricStash.** Ashley chose it. The exact titles FabricStash and “FabricStash: Sewing Stash” were not returned. The neighborhood is crowded, so she should read the conflicts below before she locks the App Store Connect name. These drafts stay on FabricStash either way.
+**Public name: My Fabric Cuts.** Ashley chose it. Apple accepted that App Store title on 27 November 2026 for Apple ID 6839844744, locale en-US. The home-screen name and the App Store name are My Fabric Cuts.
 
-**Backup: Bolt & Bobbin.** Apparently clear in this search, and it is a phrase a sewist can remember. It is a backup, not a replacement. The other four files use FabricStash.
+**Not used: Bolt & Bobbin.** The 21 November 2026 search did not return a title match, and it was a draft in this kit. It is not the public name.
 
-Two further apparently clear options, if she later wants more distance from the words “fabric stash”: **Clothroom** and **The Cutting Table**.
+**Rejected: FabricStash.** It was an earlier draft in this kit. The neighborhood is crowded, and Ashley rejected it. Do not use it, or FabricStash Cloth, as the public name.
 
-## FabricStash — crowded — public name used in this kit
+**Rejected: Stash.** Ashley had already rejected this word. The search shows the title is taken.
+
+Clothroom and The Cutting Table also looked clear on that pass. They are not the name of this app.
+
+## FabricStash — crowded — rejected
 
 Searches:
 
@@ -117,11 +119,11 @@ No app is titled exactly Pleats. Close titles:
 - **Pleats: Fabric Stash Organizer**, Ekaterina Baliasnikova, Apple ID 6823701326
 - **Pleat - Saree Pre Pleating**, Harish Anand Ramamoorthy, Apple ID 1636818308
 
-## Bolt & Bobbin — apparently clear — backup name
+## Bolt & Bobbin — apparently clear — not the public name
 
 Searches: iTunes Search API, US, terms `Bolt & Bobbin` and `Bolt and Bobbin`.
 
-No title matched. The first results were hardware and puzzle apps (Flange Bolt Size & Torque, Unscrew Jam: Nut & Bolt Puzzle, Bolt IQ+), not a sewing app with this name.
+No title matched. The first results were hardware and puzzle apps (Flange Bolt Size & Torque, Unscrew Jam: Nut & Bolt Puzzle, Bolt IQ+), not a sewing app with this name. It is not the name on the App Store. Apple accepted **My Fabric Cuts** for Apple ID 6839844744 on 27 November 2026.
 
 ## The Cutting Table — apparently clear
 
